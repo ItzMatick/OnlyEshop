@@ -1,0 +1,9 @@
+name: OnlyEshop
+version: '1.0.0'
+main: me.itzmatick.onlyEshop.OnlyEshop
+api-version: '1.21'
+commands:
+  eshop:
+    usage: /eshop <action>
+    description: Manages your eshop.
+

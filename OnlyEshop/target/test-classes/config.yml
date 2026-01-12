@@ -1,0 +1,4 @@
+messages:
+  noarg: "You need to enter at least one argument!",
+  bad_instance: "You cant use this command in console",
+  bad_arg: "This argument does not exist"
