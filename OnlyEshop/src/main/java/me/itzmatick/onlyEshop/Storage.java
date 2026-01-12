@@ -19,13 +19,18 @@ public class Storage {
     }
 
     private File GetPlayerFile(UUID uuid) {
-        return new File (plugin.getDataFolder(), "data/player" + uuid.toString() + ".yml");
+        return new File (plugin.getDataFolder(), "data/player/" + uuid.toString() + ".yml");
     }
 
     public void MakeFile(UUID uuid) {
         File file = GetPlayerFile(uuid);
         try {
-            InputStream inputstream = plugin.getResource("templayte.yml");
+            InputStream inputstream = plugin.getResource("template.yml");
+
+            if (inputstream == null) {
+                file.createNewFile();
+                return;
+            }
             Files.copy(inputstream, file.toPath());
 
         } catch (IOException e) {

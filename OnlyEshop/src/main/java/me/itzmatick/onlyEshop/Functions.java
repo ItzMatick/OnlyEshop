@@ -6,4 +6,10 @@ public class Functions {
     public Functions(OnlyEshop plugin) {
         this.plugin = plugin;
     }
+
+
+
+
+
+
 }

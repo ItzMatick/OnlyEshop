@@ -8,8 +8,11 @@ public final class OnlyEshop extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getCommand("eshop").setExecutor(new Executor(this, storage));
+        saveDefaultConfig();
+        saveResource("template.yml", false);
+
         this.storage = new Storage(this);
+        getCommand("eshop").setExecutor(new Executor(this, storage));
     }
 
     @Override

@@ -1,0 +1,9 @@
+name: OnlyEshop
+version: 1.0.0
+main: me.itzmatick.onlyEshop.OnlyEshop  # Tady musí být přesná cesta k hlavní třídě!
+api-version: 1.20 # Nebo 1.21, podle toho na čem jedeš
+
+commands:
+  eshop:
+    description: Opens eshop
+    usage: /eshop
