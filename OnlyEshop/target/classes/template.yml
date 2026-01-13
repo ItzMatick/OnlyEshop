@@ -1,1 +1,25 @@
-test
+# Data hráče
+nick: "Neznamy"
+rank: "Hrac"
+uuid: "null"
+
+# Konfigurace GUI pro tohoto hráče
+menu:
+  title: "Menu hráče %nick%"
+  rows: 3
+  items:
+    statistika:
+      slot: 13       # Slot 13 je střed (číslováno od 0)
+      material: PLAYER_HEAD
+      action:
+      name: "&e&lTvé Statistiky"
+      lore:
+        - "&7Vítej v našem shopu!"
+        - "&7Tvůj rank: &f%rank%"
+        - "&7Stav konta: &6%coins% coins"
+    zavrit:
+      slot: 26       # Vpravo dole
+      material: BARRIER
+      name: "&cZavřít menu"
+      lore: []
+      action: "CLOSE" # Speciální příkaz pro zavření

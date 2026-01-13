@@ -1,4 +1,7 @@
 messages:
   noarg: "You need to enter at least one argument!",
   bad_instance: "You cant use this command in console",
-  bad_arg: "This argument does not exist"
+  bad_arg: "This argument does not exist",
+  alreadyexist: "You already have eshop",
+  eshopcreated: "You have succesfully created your eshop",
+  cantload: "This gui cant be load."
