@@ -1,6 +1,7 @@
 package me.itzmatick.onlyEshop;
 
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,20 +23,24 @@ public class Storage {
         return new File (plugin.getDataFolder(), "data/player/" + uuid.toString() + ".yml");
     }
 
-    public void MakeFile(UUID uuid) {
+    public void MakeFile(UUID uuid, Player player) {
         File file = GetPlayerFile(uuid);
         try {
             InputStream inputstream = plugin.getResource("template.yml");
 
             if (inputstream == null) {
-                file.createNewFile();
                 return;
             }
             Files.copy(inputstream, file.toPath());
 
         } catch (IOException e) {
-            e.printStackTrace();
         }
+        player.sendMessage("Your eshop has been created!");
+        YamlConfiguration config = ReadFile(uuid);
+        config.set("nick", player.name());
+        config.set("uuid", uuid.toString());
+
+        SaveFile(uuid, config);
     }
 
     public YamlConfiguration ReadFile(UUID uuid) {
@@ -51,6 +56,15 @@ public class Storage {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public void SaveFile(UUID uuid, YamlConfiguration config) {
+        try {
+            config.save(GetPlayerFile(uuid));
+        } catch (IOException e) {
+            plugin.getLogger().severe("Plugin was not able to save data of player with UUID: " + uuid);
+            e.printStackTrace();
         }
     }
 }

@@ -44,6 +44,12 @@ public class GuiFunctions {
         ConfigurationSection itemsSection = config.getConfigurationSection("menu.items");
 
         if (itemsSection != null) {
+
+            List<Integer> used_slots = new ArrayList<>();
+            for (int i = 0; i < (rows * 9); i++) {
+                used_slots.add(i);
+            }
+
             for (String key : itemsSection.getKeys(false)) {
                 String path = "menu.items." + key + ".";
 
@@ -65,12 +71,26 @@ public class GuiFunctions {
                             if (action.equalsIgnoreCase("CLOSE")) {
                                 gui.close(player);
                             }
-                            // Tady můžeš přidat další akce, např. "BUY"
                         });
 
                 gui.setItem(slot, guiItem);
+                used_slots.remove(slot);
             }
+            Material material = Material.STONE;
+
+            GuiItem guiItem = ItemBuilder.from(material)
+                    .name(Component.text("Empty slot"))
+                    .lore(Component.text("Click to edit"))
+                    .asGuiItem(event -> {
+                        //edit function
+                    });
+
+            for (int i : used_slots) {
+                gui.setItem(i, guiItem);
+            }
+
         }
+        gui.open(player);
 
     }
 }

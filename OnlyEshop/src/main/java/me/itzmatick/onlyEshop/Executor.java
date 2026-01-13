@@ -38,18 +38,24 @@ public class Executor implements CommandExecutor {
         switch (strings[0]) {
             case "create":
                 if (!storage.ExistFile(uuid)) {
-                    storage.MakeFile(uuid);
+                    storage.MakeFile(uuid, p);
                     p.sendMessage(plugin.getConfig().getString("messages.eshopcreated"));
                 } else {
                     p.sendMessage(plugin.getConfig().getString("messages.alreadyexist"));
                 }
                 break;
             case "open":
-                if (strings[1] != null) {
-                    UUID shopuuid = UUID.fromString(strings[1]);
-                    guifunctions.OpenMenu(p, shopuuid);
+                if (strings.length != 2) {
+                    p.sendMessage("§cUsage: /eshop open <uuid>");
+                    return true;
                 }
-
+                try {
+                    UUID uuid2 = UUID.fromString(strings[1]);
+                    guifunctions.OpenMenu(p, uuid2);
+                } catch (IllegalArgumentException e) {
+                    p.sendMessage("§cNeplatné UUID!");
+                }
+                break;
             default:
                 p.sendMessage(plugin.getConfig().getString("messages.badarg"));
                 return true;

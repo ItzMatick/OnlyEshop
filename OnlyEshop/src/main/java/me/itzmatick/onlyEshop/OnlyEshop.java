@@ -12,8 +12,9 @@ public final class OnlyEshop extends JavaPlugin {
         saveDefaultConfig();
         saveResource("template.yml", false);
 
-        this.guifunctions = new GuiFunctions(this, storage);
         this.storage = new Storage(this);
+        this.guifunctions = new GuiFunctions(this, storage);
+
         getCommand("eshop").setExecutor(new Executor(this, storage, guifunctions));
 
     }
