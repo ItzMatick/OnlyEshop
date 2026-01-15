@@ -37,7 +37,7 @@ public class Storage {
         }
         player.sendMessage("Your eshop has been created!");
         YamlConfiguration config = ReadFile(uuid);
-        config.set("nick", player.name());
+        config.set("nick", player.getName());
         config.set("uuid", uuid.toString());
 
         SaveFile(uuid, config);

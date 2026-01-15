@@ -12,11 +12,13 @@ public class Executor implements CommandExecutor {
     private final OnlyEshop plugin;
     private final Storage storage;
     private final GuiFunctions guifunctions;
+    private final Domains domains;
 
-    public Executor (OnlyEshop plugin, Storage storage, GuiFunctions guifunctions) {
+    public Executor (OnlyEshop plugin, Storage storage, GuiFunctions guifunctions, Domains domains) {
         this.plugin = plugin;
         this.storage = storage;
         this.guifunctions = guifunctions;
+        this.domains = domains;
     }
 
 
@@ -40,22 +42,27 @@ public class Executor implements CommandExecutor {
                 if (!storage.ExistFile(uuid)) {
                     storage.MakeFile(uuid, p);
                     p.sendMessage(plugin.getConfig().getString("messages.eshopcreated"));
+
+                    domains.AddToArp(uuid, "Eshop_of_" + uuid);
                 } else {
                     p.sendMessage(plugin.getConfig().getString("messages.alreadyexist"));
                 }
                 break;
+
             case "open":
                 if (strings.length != 2) {
                     p.sendMessage("§cUsage: /eshop open <uuid>");
                     return true;
-                }
-                try {
-                    UUID uuid2 = UUID.fromString(strings[1]);
-                    guifunctions.OpenMenu(p, uuid2);
-                } catch (IllegalArgumentException e) {
-                    p.sendMessage("§cNeplatné UUID!");
+                } else {
+                    domains.Open(strings[1], p);
                 }
                 break;
+            case "domain":
+                if (strings.length != 3 || strings[1] != "edit") {
+                    p.sendMessage("§cUsage: /eshop domain edit <newname>");
+                    return true;
+                }
+                domains.ChangeDomain(uuid, strings[2]);
             default:
                 p.sendMessage(plugin.getConfig().getString("messages.badarg"));
                 return true;

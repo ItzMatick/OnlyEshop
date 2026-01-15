@@ -74,7 +74,7 @@ public class GuiFunctions {
                         });
 
                 gui.setItem(slot, guiItem);
-                used_slots.remove(slot);
+                used_slots.remove(Integer.valueOf(slot));
             }
             Material material = Material.STONE;
 
