@@ -18,6 +18,7 @@ public class Domains {
     }
 
     public File GetFile() {
+
         return new File (plugin.getDataFolder(), "data/arp.yml");
     }
 
@@ -33,13 +34,13 @@ public class Domains {
             boolean isTaken = false;
 
             for (String key : config.getKeys(false)) {
-                if (newname.equals(config.getString(key))) {
+                if (newname.equals(config.getString(key + ".domain"))) {
                     isTaken = true;
                     break;
                 }
             }
             if (!isTaken) {
-                config.set(uuid.toString(), newname);
+                config.set(uuid + ".domain", newname);
             }
             try {
                 config.save(GetFile());
@@ -61,7 +62,12 @@ public class Domains {
     public void AddToArp(UUID uuid, String newname) {
         YamlConfiguration config = ReadFile();
 
-        config.set(uuid.toString(), newname);
+        config.set(uuid + ".domain", newname);
+        config.set(uuid + ".menu-title", newname);
+        config.set(uuid + ".menu-description", "nothing was set");
+        config.set(uuid + ".menu-material", "STONE");
+        config.set(uuid + ".priority", 0);
+
 
         try {
             config.save(GetFile());
@@ -84,7 +90,7 @@ public class Domains {
             UUID uuid = null;
 
             for (String key : config.getKeys(false)) {
-                if (arg.equals(config.getString(key))) {
+                if (arg.equals(config.getString(key + ".domain"))) {
                     uuid = UUID.fromString(key);
                     try {
                         guifunctions.OpenMenu(p, uuid);

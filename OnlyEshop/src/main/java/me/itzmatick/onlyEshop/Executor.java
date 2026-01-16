@@ -3,6 +3,7 @@ package me.itzmatick.onlyEshop;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,12 +14,14 @@ public class Executor implements CommandExecutor {
     private final Storage storage;
     private final GuiFunctions guifunctions;
     private final Domains domains;
+    private final Menu menu;
 
-    public Executor (OnlyEshop plugin, Storage storage, GuiFunctions guifunctions, Domains domains) {
+    public Executor (OnlyEshop plugin, Storage storage, GuiFunctions guifunctions, Domains domains, Menu menu) {
         this.plugin = plugin;
         this.storage = storage;
         this.guifunctions = guifunctions;
         this.domains = domains;
+        this.menu = menu;
     }
 
 
@@ -58,11 +61,33 @@ public class Executor implements CommandExecutor {
                 }
                 break;
             case "domain":
-                if (strings.length != 3 || strings[1] != "edit") {
+                if (strings.length != 3 || !strings[1].equals("edit")) {
                     p.sendMessage("§cUsage: /eshop domain edit <newname>");
                     return true;
                 }
                 domains.ChangeDomain(uuid, strings[2]);
+                break;
+            case "title":
+                if (strings.length != 3 || !strings[1].equals("edit")) {
+                    p.sendMessage("§cUsage: /eshop title edit <newtitle>");
+                    return true;
+                }
+                YamlConfiguration config = storage.ReadFile(uuid);
+                config.set("menu.title", strings[2]);
+
+                try {
+                    config.save(String.valueOf(config));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    p.sendMessage("New title havent been set succesfully");
+                }
+            case "menu":
+                if (strings.length != 1) {
+                    p.sendMessage("§cUsage: /eshop menu");
+                    return true;
+                }
+                menu.searchEshops(null, p);
+
             default:
                 p.sendMessage(plugin.getConfig().getString("messages.badarg"));
                 return true;

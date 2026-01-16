@@ -31,7 +31,6 @@ public class GuiFunctions {
             return;
         }
         String nick = config.getString("nick");
-        String rank = config.getString("rank");
         String title = config.getString("menu.title").replace("%nick%", nick);
         int rows = config.getInt("menu.rows");
 
