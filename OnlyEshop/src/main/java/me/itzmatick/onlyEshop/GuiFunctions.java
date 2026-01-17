@@ -17,10 +17,12 @@ import java.util.UUID;
 public class GuiFunctions {
     private final OnlyEshop plugin;
     private final Storage storage;
+    private final HandleBuyTradeSell handlebuytradesell;
 
-    public GuiFunctions(OnlyEshop plugin, Storage storage) {
+    public GuiFunctions(OnlyEshop plugin, Storage storage, HandleBuyTradeSell handlebuytradesell) {
         this.plugin = plugin;
         this.storage = storage;
+        this.handlebuytradesell = handlebuytradesell;
     }
 
     public void OpenMenu(Player player, UUID uuid) {
@@ -68,6 +70,26 @@ public class GuiFunctions {
                         .lore(finallore)
                         .asGuiItem(event -> {
                             if (action.equalsIgnoreCase("CLOSE")) {
+                                gui.close(player);
+                            }
+                            if (action.equalsIgnoreCase("BUY")) {
+                                double price = config.getDouble(path + "action-info");
+                                // owner is selling something to the customers
+                                handlebuytradesell.Buy(player, mat, price);
+                            }
+                            if (action.equalsIgnoreCase("SELL")) {
+                                gui.close(player);
+                            }
+                            if (action.equalsIgnoreCase("NEXTPAGE")) {
+                                gui.close(player);
+                            }
+                            if (action.equalsIgnoreCase("PREVIUSPAGE")) {
+                                gui.close(player);
+                            }
+                            if (action.equalsIgnoreCase("SEARCH")) {
+                                gui.close(player);
+                            }
+                            if (action.equalsIgnoreCase("NONE")) {
                                 gui.close(player);
                             }
                         });

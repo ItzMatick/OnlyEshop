@@ -1,8 +1,10 @@
 me\itzmatick\onlyEshop\GuiFunctions.class
 me\itzmatick\onlyEshop\FuzzySearch.class
+me\itzmatick\onlyEshop\VaultHook.class
+me\itzmatick\onlyEshop\Executor.class
+me\itzmatick\onlyEshop\HandleBuyTradeSell.class
+me\itzmatick\onlyEshop\Menu.class
+me\itzmatick\onlyEshop\Domains.class
 me\itzmatick\onlyEshop\Storage.class
 me\itzmatick\onlyEshop\OnlyEshop.class
-me\itzmatick\onlyEshop\Executor.class
-me\itzmatick\onlyEshop\Menu.class
 me\itzmatick\onlyEshop\ShopEntry.class
-me\itzmatick\onlyEshop\Domains.class

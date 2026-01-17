@@ -81,6 +81,7 @@ public class Executor implements CommandExecutor {
                     e.printStackTrace();
                     p.sendMessage("New title havent been set succesfully");
                 }
+                break;
             case "menu":
                 if (strings.length != 1) {
                     p.sendMessage("§cUsage: /eshop menu");
