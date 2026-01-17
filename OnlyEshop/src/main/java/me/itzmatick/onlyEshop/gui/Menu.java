@@ -1,8 +1,13 @@
-package me.itzmatick.onlyEshop;
+package me.itzmatick.onlyEshop.gui;
 
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.PaginatedGui;
+import me.itzmatick.onlyEshop.data.Domains;
+import me.itzmatick.onlyEshop.OnlyEshop;
+import me.itzmatick.onlyEshop.data.Storage;
+import me.itzmatick.onlyEshop.utils.FuzzySearch;
+import me.itzmatick.onlyEshop.data.ShopEntry;
 import net.kyori.adventure.text.Component;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;

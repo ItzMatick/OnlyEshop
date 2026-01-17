@@ -1,5 +1,6 @@
-package me.itzmatick.onlyEshop;
+package me.itzmatick.onlyEshop.data;
 
+import me.itzmatick.onlyEshop.OnlyEshop;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -19,7 +20,7 @@ public class Storage {
         new File (plugin.getDataFolder(), "data/player").mkdirs();
     }
 
-    private File GetPlayerFile(UUID uuid) {
+    public File GetPlayerFile(UUID uuid) {
         return new File (plugin.getDataFolder(), "data/player/" + uuid.toString() + ".yml");
     }
 

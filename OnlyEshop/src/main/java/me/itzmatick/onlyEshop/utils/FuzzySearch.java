@@ -1,4 +1,4 @@
-package me.itzmatick.onlyEshop;
+package me.itzmatick.onlyEshop.utils;
 
 public class FuzzySearch {
 

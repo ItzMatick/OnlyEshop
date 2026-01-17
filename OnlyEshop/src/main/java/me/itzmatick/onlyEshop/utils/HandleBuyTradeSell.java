@@ -1,13 +1,17 @@
-package me.itzmatick.onlyEshop;
+package me.itzmatick.onlyEshop.utils;
 
+import me.itzmatick.onlyEshop.OnlyEshop;
 import net.wesjd.anvilgui.AnvilGUI;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import java.util.function.Consumer;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 public class HandleBuyTradeSell {
 
@@ -32,6 +36,32 @@ public class HandleBuyTradeSell {
                 VaultHook.withdraw(p, amount * price);
             } else {
                 p.sendMessage("You dont have enough money to buy this");
+            }
+        });
+    }
+
+    public void Sell(Player p, String matName, double price, UUID owneruuid) {
+        Material material = Material.getMaterial(matName.toUpperCase());
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(owneruuid);
+
+        TypeAnvil(p, material, (amount) -> {
+            double balance = VaultHook.getBalance(offlinePlayer);
+            ItemStack itemToGive = new ItemStack(material);
+
+            if (amount * price <= balance) {
+                if (p.getInventory().containsAtLeast(itemToGive, (int) Math.round(price))) {
+                    while (amount >= 1) {
+                        //offlinePlayer.give(itemToGive);
+                        amount--;
+                    }
+                    VaultHook.withdraw(offlinePlayer, amount * price);
+                    VaultHook.deposit(p, amount * price);
+                } else {
+                    p.sendMessage("You dont have enough items in your inventory");
+                }
+
+            } else {
+                p.sendMessage("Owner of this shop doesnt have money for this");
             }
         });
     }

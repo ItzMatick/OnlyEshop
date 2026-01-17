@@ -1,4 +1,4 @@
-package me.itzmatick.onlyEshop;
+package me.itzmatick.onlyEshop.data;
 
 public class ShopEntry {
     private final String uuid;

@@ -1,5 +1,10 @@
-package me.itzmatick.onlyEshop;
+package me.itzmatick.onlyEshop.commands;
 
+import me.itzmatick.onlyEshop.*;
+import me.itzmatick.onlyEshop.data.Domains;
+import me.itzmatick.onlyEshop.data.Storage;
+import me.itzmatick.onlyEshop.gui.GuiFunctions;
+import me.itzmatick.onlyEshop.gui.Menu;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -74,9 +79,8 @@ public class Executor implements CommandExecutor {
                 }
                 YamlConfiguration config = storage.ReadFile(uuid);
                 config.set("menu.title", strings[2]);
-
                 try {
-                    config.save(String.valueOf(config));
+                    storage.SaveFile(uuid, config);
                 } catch (Exception e) {
                     e.printStackTrace();
                     p.sendMessage("New title havent been set succesfully");
@@ -88,7 +92,7 @@ public class Executor implements CommandExecutor {
                     return true;
                 }
                 menu.searchEshops(null, p);
-
+                break;
             default:
                 p.sendMessage(plugin.getConfig().getString("messages.badarg"));
                 return true;

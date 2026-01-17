@@ -1,8 +1,11 @@
-package me.itzmatick.onlyEshop;
+package me.itzmatick.onlyEshop.gui;
 
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
+import me.itzmatick.onlyEshop.utils.HandleBuyTradeSell;
+import me.itzmatick.onlyEshop.OnlyEshop;
+import me.itzmatick.onlyEshop.data.Storage;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
@@ -78,7 +81,9 @@ public class GuiFunctions {
                                 handlebuytradesell.Buy(player, mat, price);
                             }
                             if (action.equalsIgnoreCase("SELL")) {
-                                gui.close(player);
+                                double price = config.getDouble(path + "action-info");
+                                // players are selling something to the owner of eshop
+                                handlebuytradesell.Sell(player, mat, price, uuid);
                             }
                             if (action.equalsIgnoreCase("NEXTPAGE")) {
                                 gui.close(player);

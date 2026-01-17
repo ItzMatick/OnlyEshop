@@ -1,5 +1,7 @@
-package me.itzmatick.onlyEshop;
+package me.itzmatick.onlyEshop.data;
 
+import me.itzmatick.onlyEshop.OnlyEshop;
+import me.itzmatick.onlyEshop.gui.GuiFunctions;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
