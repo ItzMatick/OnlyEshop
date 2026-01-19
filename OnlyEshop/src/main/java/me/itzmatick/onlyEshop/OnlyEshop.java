@@ -5,8 +5,10 @@ import me.itzmatick.onlyEshop.data.Domains;
 import me.itzmatick.onlyEshop.data.Storage;
 import me.itzmatick.onlyEshop.gui.GuiFunctions;
 import me.itzmatick.onlyEshop.gui.Menu;
+import me.itzmatick.onlyEshop.utils.ChestManager;
 import me.itzmatick.onlyEshop.utils.FuzzySearch;
 import me.itzmatick.onlyEshop.utils.HandleBuyTradeSell;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class OnlyEshop extends JavaPlugin {
@@ -17,6 +19,7 @@ public final class OnlyEshop extends JavaPlugin {
     private Menu menu;
     private FuzzySearch fuzzysearch;
     private HandleBuyTradeSell handlebuytradesell;
+    private ChestManager chestmanager;
 
     @Override
     public void onEnable() {
@@ -30,6 +33,10 @@ public final class OnlyEshop extends JavaPlugin {
         this.domains = new Domains(this, guifunctions);
         this.fuzzysearch = new FuzzySearch();
         this.menu = new Menu(this, storage, domains);
+
+        ChestManager chestManager = new ChestManager(this, storage);
+
+        getServer().getPluginManager().registerEvents(chestManager, this);
 
         getCommand("eshop").setExecutor(new Executor(this, storage, guifunctions, domains, menu));
 
