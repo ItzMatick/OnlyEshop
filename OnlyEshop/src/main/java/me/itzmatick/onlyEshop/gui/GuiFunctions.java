@@ -78,7 +78,7 @@ public class GuiFunctions {
                             if (action.equalsIgnoreCase("BUY")) {
                                 double price = config.getDouble(path + "action-info");
                                 // owner is selling something to the customers
-                                handlebuytradesell.Buy(player, mat, price);
+                                handlebuytradesell.Buy(player, mat, price, uuid);
                             }
                             if (action.equalsIgnoreCase("SELL")) {
                                 double price = config.getDouble(path + "action-info");

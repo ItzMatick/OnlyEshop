@@ -1,5 +1,9 @@
 nick: "Neznamy"
 uuid: "null"
+chests:
+  BUY CHEST:
+  SELL CHEST:
+
 
 menu:
   title: "Menu hráče %nick%"

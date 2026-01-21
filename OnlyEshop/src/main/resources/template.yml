@@ -1,8 +1,8 @@
 nick: "Neznamy"
 uuid: "null"
 chests:
-  BUY:
-  SELL:
+  BUY CHEST:
+  SELL CHEST:
 
 
 menu:

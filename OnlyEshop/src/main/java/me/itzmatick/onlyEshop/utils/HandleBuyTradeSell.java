@@ -1,10 +1,11 @@
 package me.itzmatick.onlyEshop.utils;
 
 import me.itzmatick.onlyEshop.OnlyEshop;
+import me.itzmatick.onlyEshop.data.Storage;
 import net.wesjd.anvilgui.AnvilGUI;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
+import org.bukkit.block.Chest;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -16,24 +17,40 @@ import java.util.function.Consumer;
 public class HandleBuyTradeSell {
 
     private OnlyEshop plugin;
+    private final ChestManager chestmanager;
+    private final Storage storage;
 
-    public HandleBuyTradeSell(OnlyEshop plugin) {
+    public HandleBuyTradeSell(OnlyEshop plugin, ChestManager chestmanager, Storage storage) {
         this.plugin = plugin;
+        this.chestmanager = chestmanager;
+        this.storage = storage;
     }
 
-    public void Buy(Player p, String matName, double price) {
+    public void Buy(Player p, String matName, double price, UUID owneruuid) {
         Material material = Material.getMaterial(matName.toUpperCase());
+        ItemStack item = new ItemStack(material, 1);
 
         TypeAnvil(p, material, (amount) -> {
             double balance = VaultHook.getBalance(p);
+            int invspace = canFit(p, item);
+            OfflinePlayer owner = Bukkit.getOfflinePlayer(owneruuid);
 
             if (amount * price <= balance) {
-                ItemStack itemToGive = new ItemStack(material);
-                while (amount >= 1) {
-                    p.give(itemToGive);
-                    amount--;
+                if (invspace >= amount) {
+                    if (itemsOwnerHas(material, owneruuid, "BUY CHEST") >= amount) {
+                        while (amount >= 1) {
+                            p.getInventory().addItem(item);
+                            amount--;
+                        }
+
+                        VaultHook.withdraw(p, amount * price);
+                        VaultHook.deposit(owner, amount * price);
+                    } else {
+                        p.sendMessage("Owner does not have this much items.");
+                    }
+                } else {
+                    p.sendMessage("You dont have enough space in your inventory");
                 }
-                VaultHook.withdraw(p, amount * price);
             } else {
                 p.sendMessage("You dont have enough money to buy this");
             }
@@ -102,12 +119,93 @@ public class HandleBuyTradeSell {
                 .open(p);
     }
 
+    public int canFit(Player p, ItemStack itemadd) {
+        int result = 0;
+        for (ItemStack slot : p.getInventory().getStorageContents()) {
+            if (slot == null || slot.getType() == Material.AIR) {
+                result = result + itemadd.getMaxStackSize();
+            } else if (slot.isSimilar(itemadd)) {
+                int space = slot.getType().getMaxStackSize() - slot.getAmount();
+                result = result + space;
+            }
+        }
+        return result;
+    }
 
+    public int itemSpaceInChests(UUID uuid, String type, Material mat) {
+        YamlConfiguration config = storage.ReadFile(uuid);
+        ItemStack item = new ItemStack(mat);
 
+        int result = 0;
 
+        List<String> list = config.getStringList("chests." + type);
+        for (String activeChest : list) {
+            Location loc = chestmanager.deSerializeLoc(activeChest);
 
+            Chunk chunk = loc.getChunk();
+            boolean isLoaded = loc.isChunkLoaded();
 
+            if (!isLoaded) {
+                chunk.load();
+            }
 
+            if(loc.getBlock().getState() instanceof Chest) {
+                Chest chest = (Chest) loc.getBlock().getState();
 
+                for (ItemStack slot : chest.getInventory().getContents()) {
+                    if (item != null && slot.isSimilar(item)) {
+                        result = result + item.getMaxStackSize() - slot.getAmount();
+                    } else if (item != null || slot.isEmpty()) {
+                        result = result + item.getMaxStackSize();
+                    }
+                }
+            }
 
+            if (!isLoaded) {
+                chunk.unload();
+            }
+
+        }
+        return result;
+    }
+
+    public int itemsOwnerHas (Material mat, UUID uuid, String type) {
+        YamlConfiguration config = storage.ReadFile(uuid);
+        ItemStack item = new ItemStack(mat);
+
+        int result = 0;
+
+        List<String> list = config.getStringList("chests." + type);
+        for (String activeChest : list) {
+            Location loc = chestmanager.deSerializeLoc(activeChest);
+            if (loc == null) continue;
+
+            Chunk chunk = loc.getChunk();
+            boolean isLoaded = loc.isChunkLoaded();
+
+            if (!isLoaded) {
+                chunk.load();
+            }
+            if(loc.getBlock().getState() instanceof Chest) {
+                Chest chest = (Chest) loc.getBlock().getState();
+
+                for (ItemStack slot : chest.getInventory().getContents()) {
+                    if (slot == null) {
+                        continue;
+                    }
+                    if (slot.isSimilar(item)) {
+                        result = result + slot.getAmount();
+                    }
+                }
+            }
+            if (!isLoaded) {
+                chunk.unload();
+            }
+        }
+        return result;
+    }
+
+    public void removeItems(int amount, ) {
+        
+    }
 }
