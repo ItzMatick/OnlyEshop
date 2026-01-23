@@ -30,7 +30,7 @@ public class HandleBuyTradeSell {
         Material material = Material.getMaterial(matName.toUpperCase());
         ItemStack item = new ItemStack(material, 1);
 
-        TypeAnvil(p, material, (amount) -> {
+        TypeAnvil("Amount", "1", p, material, (amount) -> {
             double balance = VaultHook.getBalance(p);
             int invspace = canFit(p, item);
             OfflinePlayer owner = Bukkit.getOfflinePlayer(owneruuid);
@@ -65,7 +65,7 @@ public class HandleBuyTradeSell {
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(owneruuid);
         ItemStack item = new ItemStack(material);
 
-        TypeAnvil(p, material, (amount) -> {
+        TypeAnvil("Amount", "1",p, material, (amount) -> {
             double balance = VaultHook.getBalance(offlinePlayer);
             ItemStack itemToGive = new ItemStack(material);
             int amountint = amount.intValue();
@@ -91,12 +91,12 @@ public class HandleBuyTradeSell {
     }
 
 
-    public void TypeAnvil(Player p, Material material, Consumer<Double> callback) {
+    public void TypeAnvil(String title, String defaulttext, Player p, Material material, Consumer<Double> callback) {
         new AnvilGUI.Builder()
                 .plugin(plugin)
-                .title("Amount")
+                .title(title)
                 .itemLeft(new ItemStack(material))
-                .text("1")
+                .text(defaulttext)
                 .onClick((slot, snapshot) -> {
                     if (slot != AnvilGUI.Slot.OUTPUT) {
                         return Collections.emptyList();

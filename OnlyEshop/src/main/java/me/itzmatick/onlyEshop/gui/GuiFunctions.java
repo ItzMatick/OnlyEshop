@@ -3,6 +3,7 @@ package me.itzmatick.onlyEshop.gui;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
+import dev.triumphteam.gui.guis.PaginatedGui;
 import me.itzmatick.onlyEshop.OnlyEshop;
 import me.itzmatick.onlyEshop.data.Storage;
 import me.itzmatick.onlyEshop.utils.HandleBuyTradeSell;
@@ -234,7 +235,14 @@ public class GuiFunctions {
                     .name(color("&7Empty slot"))
                     .lore(color("&7Click to edit"))
                     .asGuiItem(event -> {
-                        //edit function
+                        UUID u = UUID.randomUUID();
+                        config.set(menu + ".items." + u, null );
+                        config.set(menu + ".items." + u + ".slot", event.getSlot());
+                        config.set(menu + ".items." + u + ".material", "STONE");
+                        String path = (menu + ".items." + u + ".");
+                        storage.SaveFile(uuid, config);
+
+                        Edit(player, material, new ArrayList<>(), "Empty slot", path);
                     });
 
             for (int i : used_slots) {
@@ -264,8 +272,6 @@ public class GuiFunctions {
 
 
 
-
-
         GuiItem guiItem1 = ItemBuilder.from(Material.ANVIL)
                 .name(color("Edit name"))
                 .asGuiItem(event -> {
@@ -292,12 +298,120 @@ public class GuiFunctions {
                 .name(color("Change material"))
                 .asGuiItem(event -> {
 
+                    List<Material> materials = List.of(
+                            Material.DIAMOND,
+                            Material.GOLD_INGOT,
+                            Material.IRON_INGOT,
+                            Material.EMERALD
+                    );
+
+                    PaginatedGui paginatedgui = Gui.paginated()
+                            .title(Component.text("Choose material"))
+                            .rows(6)
+                            .pageSize(45)
+                            .disableAllInteractions()
+                            .create();
+
+                    for (Material mat : materials) {
+                        var item = ItemBuilder.from(mat)
+                                .asGuiItem(e -> {
+                                    config.set(path + "material", mat.toString());
+                                    storage.SaveFile(uuid, config);
+                                    Edit(player, mat, finallore, itemtitle, path);
+                                });
+                        paginatedgui.addItem(item);
+                    }
+
+                    paginatedgui.setItem(6, 2, ItemBuilder.from(Material.ARROW)
+                            .name(Component.text("§c<< Previus page"))
+                            .asGuiItem(e -> paginatedgui.previous()));
+
+                    paginatedgui.setItem(6, 8, ItemBuilder.from(Material.ARROW)
+                            .name(Component.text("§cNext page >>"))
+                            .asGuiItem(e -> paginatedgui.next()));
+
+                    paginatedgui.open(player);
                 });
+
         gui.setItem(10, guiItem2);
 
         GuiItem guiItem3 = ItemBuilder.from(Material.BARRIER)
                 .name(color("Change action"))
                 .asGuiItem(event -> {
+
+                    Gui actiongui = Gui.gui()
+                            .title(color("Edit action"))
+                            .rows(6)
+                            .disableAllInteractions()
+                            .create();
+
+                    GuiItem gui1 = ItemBuilder.from(Material.CHEST)
+                            .name(color("SELL TO PLAYERS"))
+                            .lore()
+                            .asGuiItem(inventoryClickEvent -> {
+                                config.set(path + "action", "BUY");
+                                storage.SaveFile(uuid, config);
+                                Edit(player, material, finallore, itemtitle, path);
+                            });
+
+                    actiongui.setItem(0, gui1);
+
+                    GuiItem gui2 = ItemBuilder.from(Material.ENDER_CHEST)
+                            .name(color("BUY FROM PLAYERS"))
+                            .lore()
+                            .asGuiItem(inventoryClickEvent -> {
+                                config.set(path + "action", "SELL");
+                                storage.SaveFile(uuid, config);
+                                Edit(player, material, finallore, itemtitle, path);
+                            });
+
+                    actiongui.setItem(1, gui2);
+
+                    GuiItem gui3 = ItemBuilder.from(Material.BARRIER)
+                            .name(color("CLOSE ESHOP"))
+                            .lore()
+                            .asGuiItem(inventoryClickEvent -> {
+                                config.set(path + "action", "CLOSE");
+                                storage.SaveFile(uuid, config);
+                                Edit(player, material, finallore, itemtitle, path);
+                            });
+
+                    actiongui.setItem(2, gui3);
+
+                    GuiItem gui4 = ItemBuilder.from(Material.ARROW)
+                            .name(color("NEXT PAGE"))
+                            .lore()
+                            .asGuiItem(inventoryClickEvent -> {
+                                config.set(path + "action", "NEXTPAGE");
+                                storage.SaveFile(uuid, config);
+                                Edit(player, material, finallore, itemtitle, path);
+                            });
+
+                    actiongui.setItem(3, gui4);
+
+                    GuiItem gui5 = ItemBuilder.from(Material.ARROW)
+                            .name(color("PREVIOUS PAGE"))
+                            .lore()
+                            .asGuiItem(inventoryClickEvent -> {
+                                config.set(path + "action", "PREVIUSPAGE");
+                                storage.SaveFile(uuid, config);
+                                Edit(player, material, finallore, itemtitle, path);
+                            });
+
+                    actiongui.setItem(4, gui5);
+
+                    GuiItem gui6 = ItemBuilder.from(Material.BEDROCK)
+                            .name(color("NONE"))
+                            .lore()
+                            .asGuiItem(inventoryClickEvent -> {
+                                config.set(path + "action", "NONE");
+                                storage.SaveFile(uuid, config);
+                                Edit(player, material, finallore, itemtitle, path);
+                            });
+
+                    actiongui.setItem(5, gui6);
+
+                    actiongui.open(player);
 
                 });
         gui.setItem(11, guiItem3);
@@ -322,6 +436,36 @@ public class GuiFunctions {
 
                 });
         gui.setItem(14, guiItem6);
+
+        GuiItem guiItem7 = ItemBuilder.from(Material.GOLD_BLOCK)
+                .name(color("Change price"))
+                .asGuiItem(event -> {
+                    if (config.isSet(path + "action-info")) {
+                        double price = config.getDouble(path + "action-info");
+                        String text = String.valueOf(price);
+                        handlebuytradesell.TypeAnvil("Set price", text, player, material, (amount) -> {
+                            config.set(path + "action-info", amount);
+                            storage.SaveFile(uuid, config);
+                        });
+                    } else {
+                        handlebuytradesell.TypeAnvil("Set price", "1", player, material, (amount) -> {
+                            config.set(path + "action-info", amount);
+                            storage.SaveFile(uuid, config);
+                            Edit(player, material, finallore, itemtitle, path);
+                        });
+                    }
+
+                });
+        if (config.isSet(path + "action") && (config.getString(path + "action").equals("BUY") || config.getString(path + "action").equals("SELL"))) {
+            gui.setItem(15, guiItem7);
+        }
+
+        GuiItem guiItem8 = ItemBuilder.from(Material.BARRIER)
+                .name(color("Close"))
+                .asGuiItem(event -> {
+                    EditLayout(player, 0);
+                });
+        gui.setItem(16, guiItem8);
 
         gui.open(player);
     }
