@@ -1,6 +1,6 @@
 package me.itzmatick.onlyEshop.commands;
 
-import me.itzmatick.onlyEshop.*;
+import me.itzmatick.onlyEshop.OnlyEshop;
 import me.itzmatick.onlyEshop.data.Domains;
 import me.itzmatick.onlyEshop.data.Storage;
 import me.itzmatick.onlyEshop.gui.GuiFunctions;
@@ -92,6 +92,13 @@ public class Executor implements CommandExecutor {
                     return true;
                 }
                 menu.searchEshops(null, p);
+                break;
+            case "edit":
+                if (strings.length != 1) {
+                    p.sendMessage("§cUsage: /eshop edit");
+                    return true;
+                }
+                guifunctions.EditLayout(p, 0);
                 break;
             default:
                 p.sendMessage(plugin.getConfig().getString("messages.badarg"));

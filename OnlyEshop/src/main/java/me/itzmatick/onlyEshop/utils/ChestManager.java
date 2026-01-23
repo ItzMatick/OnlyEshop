@@ -42,7 +42,7 @@ public class ChestManager implements Listener {
         if (!item.hasItemMeta()) {
             return;
         }
-        if (item.getItemMeta().getDisplayName().equals("BUY CHEST") || item.getItemMeta().getDisplayName().equals("SELL CHEST")) {
+        if (item.getItemMeta().getDisplayName().equals("§e§lBUY CHEST") || item.getItemMeta().getDisplayName().equals("§9§lSELL CHEST")) {
             UUID uuid = e.getPlayer().getUniqueId();
             String itemname = item.getItemMeta().getDisplayName();
             if (e.getBlockPlaced().getState() instanceof Chest) {

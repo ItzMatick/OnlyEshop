@@ -1,11 +1,8 @@
 nick: "Neznamy"
 uuid: "null"
 chests:
-  BUY CHEST:
-  SELL CHEST:
 
-
-menu:
+menu0:
   title: "Menu hráče %nick%"
   rows: 3
   items:
@@ -19,11 +16,48 @@ menu:
       lore:
         - "&7Vítej v našem shopu!"
     zavrit:
-      slot: 26       # Vpravo dole
+      slot: 26
       material: BARRIER
       action: "CLOSE"
       action-info:
       model-data:
       name: "&cZavřít menu"
       lore:
+    nextpage:
+      slot: 25
+      material: ARROW
+      action: "NEXTPAGE"
+      action-info:
+      model-data:
+      name: "&cNEXTPAGE"
+      lore:
 
+menu1:
+  title: "Menu hráče %nick%"
+  rows: 5
+  items:
+    statistika:
+      slot: 13
+      material: PLAYER_HEAD
+      action:
+      action-info:
+      model-data:
+      name: "&e&lTvé Statistiky"
+      lore:
+        - "&7Vítej v našem shopu!"
+    zavrit:
+      slot: 26
+      material: BARRIER
+      action: "CLOSE"
+      action-info:
+      model-data:
+      name: "&cZavřít menu"
+      lore:
+    nextpage:
+      slot: 25
+      material: ARROW
+      action: "PREVIUSPAGE"
+      action-info:
+      model-data:
+      name: "&cPREVIUSPAGE"
+      lore:

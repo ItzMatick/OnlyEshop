@@ -84,7 +84,7 @@ public class Domains {
         if (IsUUID(arg)) {
             try {
                 UUID uuid2 = UUID.fromString(arg);
-                guifunctions.OpenMenu(p, uuid2);
+                guifunctions.OpenMenu(p, uuid2, 0);
             } catch (IllegalArgumentException e) {
                 p.sendMessage("§cNot a valid UUID!");
             }
@@ -95,7 +95,7 @@ public class Domains {
                 if (arg.equals(config.getString(key + ".domain"))) {
                     uuid = UUID.fromString(key);
                     try {
-                        guifunctions.OpenMenu(p, uuid);
+                        guifunctions.OpenMenu(p, uuid, 0);
                     } catch (IllegalArgumentException e) {
                         p.sendMessage("§cSomething failed!");
                     }

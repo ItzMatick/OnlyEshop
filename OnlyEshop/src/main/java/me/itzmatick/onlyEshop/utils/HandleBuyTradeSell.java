@@ -34,17 +34,20 @@ public class HandleBuyTradeSell {
             double balance = VaultHook.getBalance(p);
             int invspace = canFit(p, item);
             OfflinePlayer owner = Bukkit.getOfflinePlayer(owneruuid);
+            int amountint = amount.intValue();
 
             if (amount * price <= balance) {
                 if (invspace >= amount) {
-                    if (itemsOwnerHas(material, owneruuid, "BUY CHEST") >= amount) {
-                        while (amount >= 1) {
-                            p.getInventory().addItem(item);
-                            amount--;
-                        }
+                    if (itemsOwnerHas(material, owneruuid, "§e§lBUY CHEST") >= amount) {
 
+                        manageChestItems(amount, item, owneruuid, "§e§lBUY CHEST");
                         VaultHook.withdraw(p, amount * price);
                         VaultHook.deposit(owner, amount * price);
+
+                        item.setAmount(amountint);
+                        p.getInventory().addItem(item);
+
+
                     } else {
                         p.sendMessage("Owner does not have this much items.");
                     }
@@ -60,23 +63,27 @@ public class HandleBuyTradeSell {
     public void Sell(Player p, String matName, double price, UUID owneruuid) {
         Material material = Material.getMaterial(matName.toUpperCase());
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(owneruuid);
+        ItemStack item = new ItemStack(material);
 
         TypeAnvil(p, material, (amount) -> {
             double balance = VaultHook.getBalance(offlinePlayer);
             ItemStack itemToGive = new ItemStack(material);
+            int amountint = amount.intValue();
 
             if (amount * price <= balance) {
-                if (p.getInventory().containsAtLeast(itemToGive, (int) Math.round(price))) {
-                    while (amount >= 1) {
-                        //offlinePlayer.give(itemToGive);
-                        amount--;
+                if (p.getInventory().containsAtLeast(itemToGive, amountint)) {
+                    if (itemSpaceInChests(owneruuid, "§9§lSELL CHEST", material) >= amount) {
+                        VaultHook.withdraw(offlinePlayer, amount * price);
+                        VaultHook.deposit(p, amount * price);
+                        manageChestItems(amount, item, owneruuid, "§9§lSELL CHEST");
+                        itemToGive.setAmount(amountint);
+                        p.getInventory().removeItem(itemToGive);
+                    } else {
+                        p.sendMessage("Owner does not have storage big enough for this");
                     }
-                    VaultHook.withdraw(offlinePlayer, amount * price);
-                    VaultHook.deposit(p, amount * price);
                 } else {
                     p.sendMessage("You dont have enough items in your inventory");
                 }
-
             } else {
                 p.sendMessage("Owner of this shop doesnt have money for this");
             }
@@ -100,10 +107,18 @@ public class HandleBuyTradeSell {
                     int multiplier = 1;
                     if (Character.isLetter(lastchar)) {
                         switch (lastchar) {
-                            case 'k','K': multiplier = 1000; break;
-                            case 'b','B': multiplier = 1000000000; break;
-                            case 'm','M': multiplier = 1000000; break;
-                            default: p.sendMessage("You cant use this symbol here"); return Collections.emptyList();
+                            case 'k', 'K':
+                                multiplier = 1000;
+                                break;
+                            case 'b', 'B':
+                                multiplier = 1000000000;
+                                break;
+                            case 'm', 'M':
+                                multiplier = 1000000;
+                                break;
+                            default:
+                                p.sendMessage("You cant use this symbol here");
+                                return Collections.emptyList();
                         }
                         substring = text.substring(0, text.length() - 1);
                     }
@@ -141,6 +156,7 @@ public class HandleBuyTradeSell {
         List<String> list = config.getStringList("chests." + type);
         for (String activeChest : list) {
             Location loc = chestmanager.deSerializeLoc(activeChest);
+            if (loc == null) continue;
 
             Chunk chunk = loc.getChunk();
             boolean isLoaded = loc.isChunkLoaded();
@@ -149,27 +165,25 @@ public class HandleBuyTradeSell {
                 chunk.load();
             }
 
-            if(loc.getBlock().getState() instanceof Chest) {
+            if (loc.getBlock().getState() instanceof Chest) {
                 Chest chest = (Chest) loc.getBlock().getState();
 
                 for (ItemStack slot : chest.getInventory().getContents()) {
-                    if (item != null && slot.isSimilar(item)) {
-                        result = result + item.getMaxStackSize() - slot.getAmount();
-                    } else if (item != null || slot.isEmpty()) {
+                    if (slot == null || slot.getType() == Material.AIR) {
                         result = result + item.getMaxStackSize();
+                    } else if (slot.isSimilar(item)) {
+                        result = result + item.getMaxStackSize() - slot.getAmount();
                     }
                 }
             }
-
             if (!isLoaded) {
                 chunk.unload();
             }
-
         }
         return result;
     }
 
-    public int itemsOwnerHas (Material mat, UUID uuid, String type) {
+    public int itemsOwnerHas(Material mat, UUID uuid, String type) {
         YamlConfiguration config = storage.ReadFile(uuid);
         ItemStack item = new ItemStack(mat);
 
@@ -186,7 +200,7 @@ public class HandleBuyTradeSell {
             if (!isLoaded) {
                 chunk.load();
             }
-            if(loc.getBlock().getState() instanceof Chest) {
+            if (loc.getBlock().getState() instanceof Chest) {
                 Chest chest = (Chest) loc.getBlock().getState();
 
                 for (ItemStack slot : chest.getInventory().getContents()) {
@@ -205,7 +219,54 @@ public class HandleBuyTradeSell {
         return result;
     }
 
-    public void removeItems(int amount, ) {
-        
+    public void manageChestItems(double amountDouble, ItemStack itemOriginal, UUID owneruuid, String type) {
+        int amount = (int) amountDouble;
+        YamlConfiguration config = storage.ReadFile(owneruuid);
+        List<String> stringloc = config.getStringList("chests." + type);
+
+        ItemStack stackToProcess = itemOriginal.clone();
+        stackToProcess.setAmount(amount);
+
+        for (String locStr : stringloc) {
+            if (amount <= 0) break;
+
+            Location location = chestmanager.deSerializeLoc(locStr);
+            if (location == null) continue;
+
+            boolean wasLoaded = location.isChunkLoaded();
+            Chunk chunk = location.getChunk();
+            if (!wasLoaded) chunk.load();
+
+            if (location.getBlock().getState() instanceof Chest) {
+                Chest chest = (Chest) location.getBlock().getState();
+
+                if (type.equals("§e§lBUY CHEST")) {
+                    stackToProcess.setAmount(amount);
+
+                    var leftovers = chest.getInventory().removeItem(stackToProcess);
+
+                    if (leftovers.isEmpty()) {
+                        amount = 0;
+                    } else {
+                        ItemStack remainingItem = leftovers.values().iterator().next();
+                        amount = remainingItem.getAmount();
+                    }
+                } else if (type.equals("§9§lSELL CHEST")) {
+
+                    stackToProcess.setAmount(amount);
+
+                    var leftovers = chest.getInventory().addItem(stackToProcess);
+
+                    if (leftovers.isEmpty()) {
+                        amount = 0;
+                    } else {
+                        ItemStack remainingItem = leftovers.values().iterator().next();
+                        amount = remainingItem.getAmount();
+                    }
+                }
+            }
+
+            if (!wasLoaded) chunk.unload();
+        }
     }
 }
