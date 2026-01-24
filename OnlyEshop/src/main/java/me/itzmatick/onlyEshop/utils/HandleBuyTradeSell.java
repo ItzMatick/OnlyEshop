@@ -39,15 +39,15 @@ public class HandleBuyTradeSell {
             if (amount * price <= balance) {
                 if (invspace >= amount) {
                     if (itemsOwnerHas(material, owneruuid, "§e§lBUY CHEST") >= amount) {
-
-                        manageChestItems(amount, item, owneruuid, "§e§lBUY CHEST");
-                        VaultHook.withdraw(p, amount * price);
-                        VaultHook.deposit(owner, amount * price);
-
-                        item.setAmount(amountint);
-                        p.getInventory().addItem(item);
-
-
+                        String error = VaultHook.withdraw(p, amount * price);
+                        if (error == null || error.isEmpty()) {
+                            VaultHook.deposit(owner, amount * price);
+                            manageChestItems(amount, item, owneruuid, "§e§lBUY CHEST");
+                            item.setAmount(amountint);
+                            p.getInventory().addItem(item);
+                        } else {
+                            p.sendMessage("Při platbě došlo k chybě");
+                        }
                     } else {
                         p.sendMessage("Owner does not have this much items.");
                     }
@@ -106,6 +106,10 @@ public class HandleBuyTradeSell {
                     char lastchar = text.charAt(text.length() - 1);
                     int multiplier = 1;
                     if (Character.isLetter(lastchar)) {
+                        if (text.length() < 2) {
+                            p.sendMessage("You need to also type number, not only suffix");
+                            return Collections.emptyList();
+                        }
                         switch (lastchar) {
                             case 'k', 'K':
                                 multiplier = 1000;
@@ -176,9 +180,6 @@ public class HandleBuyTradeSell {
                     }
                 }
             }
-            if (!isLoaded) {
-                chunk.unload();
-            }
         }
         return result;
     }
@@ -211,9 +212,6 @@ public class HandleBuyTradeSell {
                         result = result + slot.getAmount();
                     }
                 }
-            }
-            if (!isLoaded) {
-                chunk.unload();
             }
         }
         return result;
@@ -265,8 +263,6 @@ public class HandleBuyTradeSell {
                     }
                 }
             }
-
-            if (!wasLoaded) chunk.unload();
         }
     }
 }

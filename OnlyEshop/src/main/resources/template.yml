@@ -56,8 +56,8 @@ menu1:
     nextpage:
       slot: 25
       material: ARROW
-      action: "PREVIUSPAGE"
+      action: "PREVIOUSPAGE"
       action-info:
       model-data:
-      name: "&cPREVIUSPAGE"
+      name: "&cPREVIOUSPAGE"
       lore:

@@ -5,6 +5,7 @@ import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.GuiItem;
 import dev.triumphteam.gui.guis.PaginatedGui;
 import me.itzmatick.onlyEshop.OnlyEshop;
+import me.itzmatick.onlyEshop.data.Domains;
 import me.itzmatick.onlyEshop.data.Storage;
 import me.itzmatick.onlyEshop.utils.HandleBuyTradeSell;
 import net.kyori.adventure.text.Component;
@@ -15,6 +16,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,11 +27,16 @@ public class GuiFunctions {
     private final OnlyEshop plugin;
     private final Storage storage;
     private final HandleBuyTradeSell handlebuytradesell;
+    private Domains domains;
 
     public GuiFunctions(OnlyEshop plugin, Storage storage, HandleBuyTradeSell handlebuytradesell) {
         this.plugin = plugin;
         this.storage = storage;
         this.handlebuytradesell = handlebuytradesell;
+    }
+
+    public void setDomains(Domains domains) {
+        this.domains = domains;
     }
 
     public void OpenMenu(Player player, UUID uuid, int page) {
@@ -102,14 +110,14 @@ public class GuiFunctions {
                             if (action.equalsIgnoreCase("NEXTPAGE")) {
                                 OpenMenu(player, uuid, page + 1);
                             }
-                            if (action.equalsIgnoreCase("PREVIUSPAGE")) {
+                            if (action.equalsIgnoreCase("PREVIOUSPAGE")) {
                                 OpenMenu(player, uuid, page - 1);
                             }
                             if (action.equalsIgnoreCase("SEARCH")) {
                                 gui.close(player);
                             }
                             if (action.equalsIgnoreCase("NONE")) {
-                                gui.close(player);
+
                             }
                         });
 
@@ -132,7 +140,7 @@ public class GuiFunctions {
         }
     }
 
-    private Component color(String text) {
+    public static Component color(String text) {
         if (text == null) return Component.empty();
         return LegacyComponentSerializer.legacyAmpersand().deserialize(text);
     }
@@ -211,17 +219,17 @@ public class GuiFunctions {
                                 if (action.equalsIgnoreCase("NEXTPAGE")) {
                                     EditLayout(player,page + 1);
                                 }
-                                if (action.equalsIgnoreCase("PREVIUSPAGE")) {
+                                if (action.equalsIgnoreCase("PREVIOUSPAGE")) {
                                     EditLayout(player,page - 1);
                                 }
                                 if (action.equalsIgnoreCase("SEARCH")) {
                                     gui.close(player);
                                 }
                                 if (action.equalsIgnoreCase("NONE")) {
-                                    gui.close(player);
+
                                 }
                             } else if (event.isRightClick()) {
-                                Edit(player, material, finallore, itemtitle, path);
+                                Edit(player, material, finallore, itemtitle, path, page);
                             }
 
                         });
@@ -239,10 +247,13 @@ public class GuiFunctions {
                         config.set(menu + ".items." + u, null );
                         config.set(menu + ".items." + u + ".slot", event.getSlot());
                         config.set(menu + ".items." + u + ".material", "STONE");
+                        config.set(menu + ".items." + u + ".action", "NONE");
+                        config.set(menu + ".items." + u + ".name", "SET NEW NAME");
+                        config.set(menu + ".items." + u + ".lore", new ArrayList<>());
                         String path = (menu + ".items." + u + ".");
                         storage.SaveFile(uuid, config);
 
-                        Edit(player, material, new ArrayList<>(), "Empty slot", path);
+                        Edit(player, material, new ArrayList<>(), "Empty slot", path, page);
                     });
 
             for (int i : used_slots) {
@@ -252,7 +263,7 @@ public class GuiFunctions {
         }
     }
 
-    public void Edit (Player player, Material material, List<Component> finallore, String itemtitle, String path) {
+    public void Edit (Player player, Material material, List<Component> finallore, String itemtitle, String path, int page) {
         UUID uuid = player.getUniqueId();
         YamlConfiguration config = storage.ReadFile(uuid);
 
@@ -286,7 +297,7 @@ public class GuiFunctions {
                                 String output = snapshot.getText();
                                 config.set(path + "name", output);
                                 storage.SaveFile(uuid, config);
-                                Edit(player, material, finallore, output, path);
+                                Edit(player, material, finallore, output, path, page);
 
                                 return List.of(AnvilGUI.ResponseAction.close());
                             })
@@ -317,13 +328,13 @@ public class GuiFunctions {
                                 .asGuiItem(e -> {
                                     config.set(path + "material", mat.toString());
                                     storage.SaveFile(uuid, config);
-                                    Edit(player, mat, finallore, itemtitle, path);
+                                    Edit(player, mat, finallore, itemtitle, path, page);
                                 });
                         paginatedgui.addItem(item);
                     }
 
                     paginatedgui.setItem(6, 2, ItemBuilder.from(Material.ARROW)
-                            .name(Component.text("§c<< Previus page"))
+                            .name(Component.text("§c<< Previous page"))
                             .asGuiItem(e -> paginatedgui.previous()));
 
                     paginatedgui.setItem(6, 8, ItemBuilder.from(Material.ARROW)
@@ -351,7 +362,7 @@ public class GuiFunctions {
                             .asGuiItem(inventoryClickEvent -> {
                                 config.set(path + "action", "BUY");
                                 storage.SaveFile(uuid, config);
-                                Edit(player, material, finallore, itemtitle, path);
+                                Edit(player, material, finallore, itemtitle, path, page);
                             });
 
                     actiongui.setItem(0, gui1);
@@ -362,7 +373,7 @@ public class GuiFunctions {
                             .asGuiItem(inventoryClickEvent -> {
                                 config.set(path + "action", "SELL");
                                 storage.SaveFile(uuid, config);
-                                Edit(player, material, finallore, itemtitle, path);
+                                Edit(player, material, finallore, itemtitle, path, page);
                             });
 
                     actiongui.setItem(1, gui2);
@@ -373,7 +384,7 @@ public class GuiFunctions {
                             .asGuiItem(inventoryClickEvent -> {
                                 config.set(path + "action", "CLOSE");
                                 storage.SaveFile(uuid, config);
-                                Edit(player, material, finallore, itemtitle, path);
+                                Edit(player, material, finallore, itemtitle, path, page);
                             });
 
                     actiongui.setItem(2, gui3);
@@ -384,7 +395,7 @@ public class GuiFunctions {
                             .asGuiItem(inventoryClickEvent -> {
                                 config.set(path + "action", "NEXTPAGE");
                                 storage.SaveFile(uuid, config);
-                                Edit(player, material, finallore, itemtitle, path);
+                                Edit(player, material, finallore, itemtitle, path, page);
                             });
 
                     actiongui.setItem(3, gui4);
@@ -393,9 +404,9 @@ public class GuiFunctions {
                             .name(color("PREVIOUS PAGE"))
                             .lore()
                             .asGuiItem(inventoryClickEvent -> {
-                                config.set(path + "action", "PREVIUSPAGE");
+                                config.set(path + "action", "PREVIOUSPAGE");
                                 storage.SaveFile(uuid, config);
-                                Edit(player, material, finallore, itemtitle, path);
+                                Edit(player, material, finallore, itemtitle, path, page);
                             });
 
                     actiongui.setItem(4, gui5);
@@ -406,7 +417,7 @@ public class GuiFunctions {
                             .asGuiItem(inventoryClickEvent -> {
                                 config.set(path + "action", "NONE");
                                 storage.SaveFile(uuid, config);
-                                Edit(player, material, finallore, itemtitle, path);
+                                Edit(player, material, finallore, itemtitle, path, page);
                             });
 
                     actiongui.setItem(5, gui6);
@@ -416,26 +427,62 @@ public class GuiFunctions {
                 });
         gui.setItem(11, guiItem3);
 
+        String defaulttxt = String.join(";", config.getStringList(path + "lore"));
+
         GuiItem guiItem4 = ItemBuilder.from(Material.BIRCH_SIGN)
                 .name(color("Change lore"))
                 .asGuiItem(event -> {
+                    new AnvilGUI.Builder()
+                            .plugin(plugin)
+                            .title("Change item lore")
+                            .text(defaulttxt)
+                            .onClick((slot, snapshot) -> {
+                                if (slot != AnvilGUI.Slot.OUTPUT) {
+                                    return Collections.emptyList();
+                                }
+                                String text = snapshot.getText();
 
+                                String[] rawParts = text.split(";");
+
+                                List<String> finalParts = new ArrayList<>();
+                                List<Component> finalComponents = new ArrayList<>();
+
+                                for (int i = 0; i < rawParts.length; i++) {
+                                    if (i >= 4) {
+                                        player.sendMessage("The max amount of lines in lore is 4");
+                                        return Collections.emptyList();
+                                    }
+                                    finalParts.add(rawParts[i]);
+                                    finalComponents.add(color(rawParts[i]));
+                                }
+                                config.set(path + "lore", finalParts);
+                                storage.SaveFile(uuid, config);
+                                Edit(player, material, finalComponents, itemtitle, path, page);
+
+                                return List.of(AnvilGUI.ResponseAction.close());
+                            })
+                            .open(player);
                 });
         gui.setItem(12, guiItem4);
 
         GuiItem guiItem5 = ItemBuilder.from(Material.ENDER_EYE)
                 .name(color("Change slot"))
                 .asGuiItem(event -> {
+                    handlebuytradesell.TypeAnvil("Set price", String.valueOf(config.getInt(path + "slot") + 1), player, material, (amount) -> {
+                        int rows = config.getInt("menu" + page + ".rows");
+                        int maxslot = (rows * 9);
+                        if (amount > maxslot || amount < 1) {
+                            player.sendMessage("This number of slot does not exist - give this page more rows or put different number of slot here");
+                            Edit(player, material, finallore, itemtitle, path, page);
+                        } else {
+                            config.set(path + "slot", amount - 1);
+                            storage.SaveFile(uuid, config);
+                            Edit(player, material, finallore, itemtitle, path, page);
+                        }
 
+                    });
                 });
         gui.setItem(13, guiItem5);
-
-        GuiItem guiItem6 = ItemBuilder.from(Material.CHEST)
-                .name(color("Change model data"))
-                .asGuiItem(event -> {
-
-                });
-        gui.setItem(14, guiItem6);
 
         GuiItem guiItem7 = ItemBuilder.from(Material.GOLD_BLOCK)
                 .name(color("Change price"))
@@ -446,12 +493,13 @@ public class GuiFunctions {
                         handlebuytradesell.TypeAnvil("Set price", text, player, material, (amount) -> {
                             config.set(path + "action-info", amount);
                             storage.SaveFile(uuid, config);
+                            Edit(player, material, finallore, itemtitle, path, page);
                         });
                     } else {
                         handlebuytradesell.TypeAnvil("Set price", "1", player, material, (amount) -> {
                             config.set(path + "action-info", amount);
                             storage.SaveFile(uuid, config);
-                            Edit(player, material, finallore, itemtitle, path);
+                            Edit(player, material, finallore, itemtitle, path, page);
                         });
                     }
 
@@ -463,10 +511,316 @@ public class GuiFunctions {
         GuiItem guiItem8 = ItemBuilder.from(Material.BARRIER)
                 .name(color("Close"))
                 .asGuiItem(event -> {
-                    EditLayout(player, 0);
+                    EditLayout(player, page);
                 });
         gui.setItem(16, guiItem8);
 
+        GuiItem guiItem9 = ItemBuilder.from(Material.BARRIER)
+                .name(color("Delete item"))
+                .asGuiItem(event -> {
+                    config.set(path.substring(0, path.length() - 1), null);
+                    storage.SaveFile(uuid, config);
+                    EditLayout(player, page);
+                });
+        gui.setItem(17, guiItem9);
+
         gui.open(player);
+    }
+
+    public void OpenSettings(Player player) {
+        UUID uuid = player.getUniqueId();
+        YamlConfiguration config = domains.ReadFile();
+        String path = uuid + ".";
+
+        if (!config.isSet(uuid.toString())) {
+            player.sendMessage("You dont have an eshop yet!");
+            player.sendMessage("Create one using /eshop create");
+            return;
+        }
+
+        Gui gui = Gui.gui()
+                .title(color("Edit your eshop"))
+                .rows(2)
+                .disableAllInteractions()
+                .create();
+
+        Material material = Material.getMaterial(config.getString(path + "menu-material", ""));
+        String itemtitle = config.getString(path + "menu-title");
+        String domain = config.getString(path + "domain");
+
+        String input = config.getString(path + "menu-description");
+        String[] lines = input.split(";");
+        List<Component> finallore = new ArrayList<>();
+
+        finallore.add(Component.text("DOMAIN: " + domain));
+        for (String line : lines) {
+            finallore.add(color(line.trim()));
+        }
+
+        GuiItem guiItem = ItemBuilder.from(material)
+                .name(color(itemtitle))
+                .lore(finallore)
+                .asGuiItem();
+
+        gui.setItem(4, guiItem);
+
+        GuiItem guiItem1 = ItemBuilder.from(Material.ANVIL)
+                .name(color("Edit menu title"))
+                .asGuiItem(event -> {
+                    new AnvilGUI.Builder()
+                            .plugin(plugin)
+                            .title("Edit menu title")
+                            .text(config.getString("menu-title", " "))
+                            .onClick((slot, snapshot) -> {
+                                if (slot != AnvilGUI.Slot.OUTPUT) {
+                                    return Collections.emptyList();
+                                }
+                                String output = snapshot.getText();
+                                config.set(path + "menu-title", output);
+                                SaveArp(config);
+                                OpenSettings(player);
+                                return List.of(AnvilGUI.ResponseAction.close());
+                            })
+                            .open(player);
+                });
+        gui.setItem(9, guiItem1);
+
+        GuiItem guiItem2 = ItemBuilder.from(Material.GRASS_BLOCK)
+                .name(color("Change material"))
+                .asGuiItem(event -> {
+
+                    List<Material> materials = List.of(
+                            Material.DIAMOND,
+                            Material.GOLD_INGOT,
+                            Material.IRON_INGOT,
+                            Material.EMERALD
+                    );
+
+                    PaginatedGui paginatedgui = Gui.paginated()
+                            .title(Component.text("Choose material"))
+                            .rows(6)
+                            .pageSize(45)
+                            .disableAllInteractions()
+                            .create();
+
+                    for (Material mat : materials) {
+                        var item = ItemBuilder.from(mat)
+                                .asGuiItem(e -> {
+                                    config.set(path + "menu-material", mat.toString());
+                                    SaveArp(config);
+                                    OpenSettings(player);
+                                });
+                        paginatedgui.addItem(item);
+                    }
+
+                    paginatedgui.setItem(6, 2, ItemBuilder.from(Material.ARROW)
+                            .name(Component.text("§c<< Previous page"))
+                            .asGuiItem(e -> paginatedgui.previous()));
+
+                    paginatedgui.setItem(6, 5, ItemBuilder.from(Material.BARRIER)
+                            .name(Component.text("§c<< Close"))
+                            .asGuiItem(e -> OpenSettings(player)));
+
+                    paginatedgui.setItem(6, 8, ItemBuilder.from(Material.ARROW)
+                            .name(Component.text("§cNext page >>"))
+                            .asGuiItem(e -> paginatedgui.next()));
+
+                    paginatedgui.open(player);
+                });
+
+        gui.setItem(10, guiItem2);
+        /*
+        GuiItem guiItem3 = ItemBuilder.from(Material.BARRIER)
+                .name(color("Change sound"))
+                .asGuiItem(event -> {
+
+                    Gui actiongui = Gui.gui()
+                            .title(color("Edit action"))
+                            .rows(6)
+                            .disableAllInteractions()
+                            .create();
+
+                    GuiItem gui1 = ItemBuilder.from(Material.CHEST)
+                            .name(color("SELL TO PLAYERS"))
+                            .lore()
+                            .asGuiItem(inventoryClickEvent -> {
+                                config.set(path + "action", "BUY");
+                                SaveFile();
+                                Edit(player, material, finallore, itemtitle, path, page);
+                            });
+
+                    actiongui.setItem(0, gui1);
+
+                    GuiItem gui2 = ItemBuilder.from(Material.ENDER_CHEST)
+                            .name(color("BUY FROM PLAYERS"))
+                            .lore()
+                            .asGuiItem(inventoryClickEvent -> {
+                                config.set(path + "action", "SELL");
+                                storage.SaveFile(uuid, config);
+                                Edit(player, material, finallore, itemtitle, path, page);
+                            });
+
+                    actiongui.setItem(1, gui2);
+
+                    GuiItem gui3 = ItemBuilder.from(Material.BARRIER)
+                            .name(color("CLOSE ESHOP"))
+                            .lore()
+                            .asGuiItem(inventoryClickEvent -> {
+                                config.set(path + "action", "CLOSE");
+                                storage.SaveFile(uuid, config);
+                                Edit(player, material, finallore, itemtitle, path, page);
+                            });
+
+                    actiongui.setItem(2, gui3);
+
+                    GuiItem gui4 = ItemBuilder.from(Material.ARROW)
+                            .name(color("NEXT PAGE"))
+                            .lore()
+                            .asGuiItem(inventoryClickEvent -> {
+                                config.set(path + "action", "NEXTPAGE");
+                                storage.SaveFile(uuid, config);
+                                Edit(player, material, finallore, itemtitle, path, page);
+                            });
+
+                    actiongui.setItem(3, gui4);
+
+                    GuiItem gui5 = ItemBuilder.from(Material.ARROW)
+                            .name(color("PREVIOUS PAGE"))
+                            .lore()
+                            .asGuiItem(inventoryClickEvent -> {
+                                config.set(path + "action", "PREVIOUSPAGE");
+                                storage.SaveFile(uuid, config);
+                                Edit(player, material, finallore, itemtitle, path, page);
+                            });
+
+                    actiongui.setItem(4, gui5);
+
+                    GuiItem gui6 = ItemBuilder.from(Material.BEDROCK)
+                            .name(color("NONE"))
+                            .lore()
+                            .asGuiItem(inventoryClickEvent -> {
+                                config.set(path + "action", "NONE");
+                                storage.SaveFile(uuid, config);
+                                Edit(player, material, finallore, itemtitle, path, page);
+                            });
+
+                    actiongui.setItem(5, gui6);
+
+                    actiongui.open(player);
+
+                });
+        gui.setItem(11, guiItem3); */
+
+        GuiItem guiItem4 = ItemBuilder.from(Material.BIRCH_SIGN)
+                .name(color("Change description"))
+                .asGuiItem(event -> {
+                    new AnvilGUI.Builder()
+                            .plugin(plugin)
+                            .title("Edit description")
+                            .text(config.getString(path + "menu-description", ""))
+                            .onClick((slot, snapshot) -> {
+                                if (slot != AnvilGUI.Slot.OUTPUT) {
+                                    return Collections.emptyList();
+                                }
+                                String text = snapshot.getText();
+
+                                String[] rawParts = text.split(";");
+
+                                for (int i = 0; i < rawParts.length; i++) {
+                                    if (i >= 3) {
+                                        player.sendMessage("The max amount of lines in lore is 3");
+                                        return Collections.emptyList();
+                                    }
+                                }
+                                config.set(path + "menu-description", text);
+                                SaveArp(config);
+                                OpenSettings(player);
+
+                                return List.of(AnvilGUI.ResponseAction.close());
+                            })
+                            .open(player);
+                });
+        gui.setItem(12, guiItem4);
+        /*
+        GuiItem guiItem5 = ItemBuilder.from(Material.ENDER_EYE)
+                .name(color("Change slot"))
+                .asGuiItem(event -> {
+                    handlebuytradesell.TypeAnvil("Set price", String.valueOf(config.getInt(path + "slot")), player, material, (amount) -> {
+                        int rows = config.getInt("menu" + page + ".rows");
+                        int maxslot = (rows * 9);
+                        if (amount > maxslot || amount < 1) {
+                            player.sendMessage("This number of slot does not exist - give this page more rows or put different number of slot here");
+                            Edit(player, material, finallore, itemtitle, path, page);
+                        } else {
+                            config.set(path + "slot", amount - 1);
+                            storage.SaveFile(uuid, config);
+                            Edit(player, material, finallore, itemtitle, path, page);
+                        }
+
+                    });
+                });
+        gui.setItem(13, guiItem5);
+        */
+        GuiItem guiItem7 = ItemBuilder.from(Material.GOLD_BLOCK)
+                .name(color("Change domain"))
+                .asGuiItem(event -> {
+                    new AnvilGUI.Builder()
+                            .plugin(plugin)
+                            .title("Change domain")
+                            .text(config.getString(path + "domain"))
+                            .onClick((slot, snapshot) -> {
+                                if (slot != AnvilGUI.Slot.OUTPUT) {
+                                    return Collections.emptyList();
+                                }
+                                String output = snapshot.getText();
+                                domains.ChangeDomain(uuid, output);
+                                OpenSettings(player);
+                                return List.of(AnvilGUI.ResponseAction.close());
+                            })
+                            .open(player);
+                });
+        gui.setItem(13, guiItem7);
+
+        GuiItem guiItem8 = ItemBuilder.from(Material.DIAMOND)
+                .name(color("Edit content"))
+                .asGuiItem(event -> {
+                    EditLayout(player, 0);
+                });
+
+        gui.setItem(14, guiItem8);
+        /*
+        if (config.isSet(path + "action") && (config.getString(path + "action").equals("BUY") || config.getString(path + "action").equals("SELL"))) {
+            gui.setItem(15, guiItem7);
+        }
+
+        GuiItem guiItem8 = ItemBuilder.from(Material.BARRIER)
+                .name(color("Close"))
+                .asGuiItem(event -> {
+                    EditLayout(player, page);
+                });
+        gui.setItem(16, guiItem8);
+
+        GuiItem guiItem9 = ItemBuilder.from(Material.BARRIER)
+                .name(color("Delete item"))
+                .asGuiItem(event -> {
+                    config.set(path.substring(0, path.length() - 1), null);
+                    storage.SaveFile(uuid, config);
+                    EditLayout(player, page);
+                });
+        gui.setItem(17, guiItem9);
+        */
+        gui.open(player);
+    }
+
+
+    public void SaveArp(YamlConfiguration config) {
+        File file = new File(plugin.getDataFolder() + "/data","arp.yml");
+
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            plugin.getLogger().severe("There was a problem with saving arp.yml file");
+            e.printStackTrace();
+        }
     }
 }

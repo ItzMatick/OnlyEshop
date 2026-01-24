@@ -32,6 +32,7 @@ public final class OnlyEshop extends JavaPlugin {
         this.handlebuytradesell = new HandleBuyTradeSell(this, chestmanager, storage);
         this.guifunctions = new GuiFunctions(this, storage, handlebuytradesell);
         this.domains = new Domains(this, guifunctions);
+        this.guifunctions.setDomains(this.domains);
         this.fuzzysearch = new FuzzySearch();
         this.menu = new Menu(this, storage, domains);
 

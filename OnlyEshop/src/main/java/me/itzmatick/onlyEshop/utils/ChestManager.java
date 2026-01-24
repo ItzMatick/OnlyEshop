@@ -78,6 +78,14 @@ public class ChestManager implements Listener {
                 UUID uuid = UUID.fromString(owneruuid);
                 Location loc = e.getBlock().getLocation();
 
+                Chest chest = (Chest) state;
+                for (ItemStack content : chest.getInventory().getContents()) {
+                    if (content != null && content.getType() != Material.AIR) {
+                        loc.getWorld().dropItemNaturally(loc, content);
+                    }
+                }
+                chest.getInventory().clear();
+
                 removeLocationFromConfig(type, loc, uuid);
                 e.setDropItems(false);
 

@@ -2,6 +2,7 @@ package me.itzmatick.onlyEshop.data;
 
 import me.itzmatick.onlyEshop.OnlyEshop;
 import me.itzmatick.onlyEshop.gui.GuiFunctions;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -31,8 +32,13 @@ public class Domains {
 
     public void ChangeDomain(UUID uuid, String newname) {
         YamlConfiguration config = ReadFile();
+        Player player = Bukkit.getPlayer(uuid);
 
         if (config.contains(uuid.toString()) && !IsUUID(newname)) {
+            if (!newname.matches("^[a-zA-Z0-9_]{3,16}$")) {
+                player.sendMessage("§cThe domain can only contain letters, numbers, underscores and must be 3-16 characters long!");
+                return;
+            }
             boolean isTaken = false;
 
             for (String key : config.getKeys(false)) {
@@ -49,6 +55,8 @@ public class Domains {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else {
+            player.sendMessage("You cant set your domain to this");
         }
     }
 

@@ -55,6 +55,7 @@ public class Executor implements CommandExecutor {
                 } else {
                     p.sendMessage(plugin.getConfig().getString("messages.alreadyexist"));
                 }
+                guifunctions.OpenSettings(p);
                 break;
 
             case "open":
@@ -98,7 +99,7 @@ public class Executor implements CommandExecutor {
                     p.sendMessage("§cUsage: /eshop edit");
                     return true;
                 }
-                guifunctions.EditLayout(p, 0);
+                guifunctions.OpenSettings(p);
                 break;
             default:
                 p.sendMessage(plugin.getConfig().getString("messages.badarg"));

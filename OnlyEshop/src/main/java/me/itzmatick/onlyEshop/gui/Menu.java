@@ -3,12 +3,13 @@ package me.itzmatick.onlyEshop.gui;
 import dev.triumphteam.gui.builder.item.ItemBuilder;
 import dev.triumphteam.gui.guis.Gui;
 import dev.triumphteam.gui.guis.PaginatedGui;
-import me.itzmatick.onlyEshop.data.Domains;
 import me.itzmatick.onlyEshop.OnlyEshop;
+import me.itzmatick.onlyEshop.data.Domains;
+import me.itzmatick.onlyEshop.data.ShopEntry;
 import me.itzmatick.onlyEshop.data.Storage;
 import me.itzmatick.onlyEshop.utils.FuzzySearch;
-import me.itzmatick.onlyEshop.data.ShopEntry;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -65,7 +66,7 @@ public class Menu {
                     .create();
 
             gui.setItem(6, 2, ItemBuilder.from(Material.ARROW)
-                    .name(Component.text("§c<< Previus page"))
+                    .name(Component.text("§c<< Previous page"))
                     .asGuiItem(event -> {}));
 
             gui.setItem(6, 8, ItemBuilder.from(Material.ARROW)
@@ -100,13 +101,18 @@ public class Menu {
             if (material == null) {
                 material = Material.STONE;
             }
+            String input = eshop.getDescription();
+            String[] lines = input.split(";");
+            List<Component> finallore = new ArrayList<>();
+
+            finallore.add(Component.text("DOMAIN: " + eshop.getDomain()));
+            for (String line : lines) {
+                finallore.add(LegacyComponentSerializer.legacyAmpersand().deserialize(line.trim()));
+            }
 
             var item = ItemBuilder.from(material)
                     .name(Component.text(eshop.getTitle()))
-                    .lore(
-                            Component.text("DOMAIN: " + eshop.getDomain()),
-                            Component.text(eshop.getDescription())
-                    )
+                    .lore(finallore)
                     .asGuiItem(event -> {
                         p.sendMessage("Opening eshop " + eshop.getDomain());
                         p.closeInventory();
@@ -117,7 +123,7 @@ public class Menu {
         }
 
         gui.setItem(6, 2, ItemBuilder.from(Material.ARROW)
-                .name(Component.text("§c<< Previus page"))
+                .name(Component.text("§c<< Previous page"))
                 .asGuiItem(event -> gui.previous()));
 
         gui.setItem(6, 8, ItemBuilder.from(Material.ARROW)
