@@ -55,5 +55,4 @@ Thank you for supporting OnlyEshop.
 Let's change the economy meta together.
 
 - ItzMatick
-================================================================================
 
