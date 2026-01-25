@@ -2,7 +2,9 @@ me\itzmatick\onlyEshop\utils\VaultHook.class
 me\itzmatick\onlyEshop\utils\HandleBuyTradeSell.class
 me\itzmatick\onlyEshop\data\ShopEntry.class
 me\itzmatick\onlyEshop\data\Storage.class
+me\itzmatick\onlyEshop\utils\Config.class
 me\itzmatick\onlyEshop\utils\FuzzySearch.class
+me\itzmatick\onlyEshop\commands\Reload.class
 me\itzmatick\onlyEshop\commands\Executor.class
 me\itzmatick\onlyEshop\gui\GuiFunctions.class
 me\itzmatick\onlyEshop\data\Domains.class

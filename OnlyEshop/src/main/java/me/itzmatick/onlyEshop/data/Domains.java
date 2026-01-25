@@ -2,6 +2,7 @@ package me.itzmatick.onlyEshop.data;
 
 import me.itzmatick.onlyEshop.OnlyEshop;
 import me.itzmatick.onlyEshop.gui.GuiFunctions;
+import me.itzmatick.onlyEshop.utils.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -36,7 +37,7 @@ public class Domains {
 
         if (config.contains(uuid.toString()) && !IsUUID(newname)) {
             if (!newname.matches("^[a-zA-Z0-9_]{3,16}$")) {
-                player.sendMessage("§cThe domain can only contain letters, numbers, underscores and must be 3-16 characters long!");
+                player.sendMessage(Config.getMessageComponent("domain-invalid"));
                 return;
             }
             boolean isTaken = false;
@@ -49,14 +50,18 @@ public class Domains {
             }
             if (!isTaken) {
                 config.set(uuid + ".domain", newname);
+                player.sendMessage(Config.getMessageComponent("domain-changed"));
+            } else {
+                player.sendMessage(Config.getMessageComponent("domain-taken"));
             }
             try {
                 config.save(GetFile());
             } catch (Exception e) {
                 e.printStackTrace();
+                player.sendMessage(Config.getMessageComponent("unknown-error"));
             }
         } else {
-            player.sendMessage("You cant set your domain to this");
+            player.sendMessage(Config.getMessageComponent("domain-invalid"));
         }
     }
 
@@ -74,8 +79,8 @@ public class Domains {
 
         config.set(uuid + ".domain", newname);
         config.set(uuid + ".menu-title", newname);
-        config.set(uuid + ".menu-description", "nothing was set");
-        config.set(uuid + ".menu-material", "STONE");
+        config.set(uuid + ".menu-description", Config.getString("default-eshop-description"));
+        config.set(uuid + ".menu-material", Config.getString("default-menu-material"));
         config.set(uuid + ".priority", 0);
 
 
@@ -94,7 +99,7 @@ public class Domains {
                 UUID uuid2 = UUID.fromString(arg);
                 guifunctions.OpenMenu(p, uuid2, 0);
             } catch (IllegalArgumentException e) {
-                p.sendMessage("§cNot a valid UUID!");
+                p.sendMessage(Config.getMessageComponent("not-valid-uuid"));
             }
         } else {
             UUID uuid = null;
@@ -105,13 +110,13 @@ public class Domains {
                     try {
                         guifunctions.OpenMenu(p, uuid, 0);
                     } catch (IllegalArgumentException e) {
-                        p.sendMessage("§cSomething failed!");
+                        p.sendMessage(Config.getMessageComponent("unknown-error"));
                     }
                     break;
                 }
             }
             if (uuid == null) {
-                p.sendMessage("There isnt any shop with this domain");
+                p.sendMessage(Config.getMessageComponent("shop-not-found"));
             }
 
         }

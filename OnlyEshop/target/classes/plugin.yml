@@ -1,9 +1,19 @@
 name: OnlyEshop
 version: 1.0.0
-main: me.itzmatick.onlyEshop.OnlyEshop  # Tady musí být přesná cesta k hlavní třídě!
-api-version: 1.20 # Nebo 1.21, podle toho na čem jedeš
+main: me.itzmatick.onlyEshop.OnlyEshop
+api-version: 1.21
 
 commands:
   eshop:
     description: Opens eshop
     usage: /eshop
+
+  reload:
+    description: Reload plugin
+    usage: /reload eshop
+    permission: only.eshops.reload
+
+permissions:
+  only.eshop.reload:
+    description: Reload plugin permissions
+    default: op

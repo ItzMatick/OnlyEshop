@@ -1,7 +1,135 @@
+# -----------------------------------------------------------------------------
+#   ____        _       ______     _
+#  / __ \      | |     |  ____|   | |
+# | |  | |_ __ | |_   _| |__   ___| |__   ___  _ __
+# | |  | | '_ \| | | | |  __| / __| '_ \ / _ \| '_ \
+# | |__| | | | | | |_| | |____\__ \ | | | (_) | |_) |
+#  \____/|_| |_|_|\__, |______|___/_| |_|\___/| .__/
+#                  __/ |                      | |
+#                 |___/                       |_|
+#
+#   OnlyEshop Configuration File
+#   Version: 1.0.0 BETA
+# -----------------------------------------------------------------------------
+
+settings:
+  # Prefix, shown before any message
+  prefix: "&8[&6OnlyEshop&8] &7"
+
 messages:
-  noarg: "You need to enter at least one argument!"
-  bad_instance: "You cant use this command in console"
-  badarg: "This argument does not exist"
-  alreadyexist: "You already have eshop"
-  eshopcreated: "You have succesfully created your eshop"
-  cantload: "This gui cant be load."
+  # --- General Errors & Permissions ---
+  no-permission: "&cYou do not have permission to execute this command."
+  only-players: "&cOnly players can use this command."
+  invalid-args: "&cInvalid arguments! Usage: &f/eshop help"
+  unknown-error: "&cAn unknown error occurred. Please contact an admin."
+  config-reloaded: "&aConfiguration has been successfully reloaded."
+
+  # --- Shop Logic & Creation ---
+  shop-created: "&aYour eshop has been successfully created! Use &e/eshop edit &ato manage it."
+  shop-already-exists: "&cYou already have an eshop! You cannot create another one."
+  shop-not-found: "&cEshop with this domain or owner was not found."
+  dont-have-eshop: "&cYou don't have an eshop yet! Create one using &e/eshop create"
+
+  # Error when trying to edit without owning a shop
+  cant-load-edit: "&cYou cannot access the editor unless you have an eshop created."
+
+  # --- Command Usage Hints ---
+  eshop-open-usage: "&cUsage: /eshop open <uuid> or <domain>"
+  eshop-domain-edit-usage: "&cUsage: /eshop domain edit <newname>"
+  eshop-title-edit-usage: "&cUsage: /eshop title edit <newtitle>"
+  eshop-edit-usage: "&cUsage: /eshop edit"
+  eshop-menu-usage: "&cUsage: /eshop menu"
+
+  # --- Validation Errors (Inputs) ---
+  not-valid-uuid: "&cNot a valid UUID format!"
+  unvalid-format: "&cThis is not a valid format."
+  bad-symbol: "&cYou cannot use this symbol here."
+  only-suffix: "&cYou need to type a number, not just the suffix."
+  write-something: "&cYou need to write something to search."
+
+  # Limits
+  max-lines-4: "&cThe maximum amount of lines in lore is 4."
+  max-lines-3: "&cMax 3 lines allowed here."
+  slot-not-found: "&cThis slot number does not exist. Add more rows or pick a valid slot."
+
+  # --- Domain System ---
+  domain-changed: "&aYour eshop domain has been changed to: &e%domain%"
+  domain-taken: "&cThis domain is already taken! Please choose another one."
+  domain-invalid: "&cInvalid domain name! Use only A-Z, 0-9 and underscores."
+
+  # --- Economy & Transactions ---
+  not-enough-money-player: "&cYou don't have enough money! You need &e%diff%$ &cmore."
+  not-enough-money-owner: "&cThe shop owner doesn't have enough money to buy this from you."
+
+  # Inventory issues
+  inventory-full: "&cYour inventory is full! Please make some space."
+  not-enough-items: "&cYou don't have enough items in your inventory."
+
+  # Stock issues (Owner side)
+  owner-not-enough-items: "&cThe shop owner does not have enough stock."
+  owner-not-enough-storage: "&cThe owner's storage is full, they cannot accept more items."
+
+  # Generic fail
+  transaction-failed: "&cTransaction failed due to an economy error."
+
+  # --- Chest Linking ---
+  chest-placed-buy: "&aYou placed a &eBUY CHEST&a. Fill it with items to sell."
+  chest-placed-sell: "&aYou placed a &9SELL CHEST&a. Items bought from players will go here."
+
+  # Misc
+  opening-eshop: "&7Opening eshop: &e%domain%"
+
+# -----------------------------------------------------------------------------
+#   GUI SETTINGS (Visuals & Buttons)
+#   Here you can translate the text inside the menus.
+# -----------------------------------------------------------------------------
+more:
+  # Defaults for new shops
+  default-domain: "Eshop_of_%uuid%"
+  default-eshop-description: "nothing was set"
+  default-menu-material: "STONE"
+
+  # Editor Placeholders
+  editor-empty-item: "&7Empty slot"
+  editor-empty-item-description: "&7Click to edit"
+  editor-empty-item-material: "STONE"
+  editor-default-item-name: "SET NEW NAME"
+
+  # --- Button Names ---
+  edit-slot: "&eEdit slot"
+  edit-name: "&eEdit name"
+  edit-lore: "&eEdit lore"
+  edit-material: "&eEdit material"
+  edit-price: "&6Edit price"
+  edit-action: "&bEdit action"
+
+  # Navigation
+  previous-page: "&c<< Previous page"
+  next-page: "&cNext page >>"
+  back: "&cBack"
+  close: "&cClose"
+
+  # Search
+  search: "Search"
+  default-search-text: "Search anything..."
+
+  # Misc GUI items
+  amount: "Amount"
+  delete-item: "&4Delete item"
+
+  # --- Action Statuses (Shown in Lore) ---
+  actions:
+    sellplayers: "&aSELL TO PLAYERS"
+    buyfromplayers: "&9BUY FROM PLAYERS"
+    close: "&cCLOSE MENU"
+    nextpage: "&7NEXT PAGE"
+    previouspage: "&7PREVIOUS PAGE"
+    none: "&8NONE"
+
+  # --- Inventory Titles ---
+  edit-your-eshop: "Edit your eshop"
+  edit-search-title: "Edit search title"
+  edit-domain: "Edit domain"
+  edit-content: "Edit content"
+  eshop-browser-title: "Eshop browser"
+  no-eshops-found-title: "No eshops were found"

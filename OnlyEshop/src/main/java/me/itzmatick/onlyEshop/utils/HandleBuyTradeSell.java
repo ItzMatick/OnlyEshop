@@ -30,7 +30,7 @@ public class HandleBuyTradeSell {
         Material material = Material.getMaterial(matName.toUpperCase());
         ItemStack item = new ItemStack(material, 1);
 
-        TypeAnvil("Amount", "1", p, material, (amount) -> {
+        TypeAnvil(Config.getPlain("amount", ""), "1", p, material, (amount) -> {
             double balance = VaultHook.getBalance(p);
             int invspace = canFit(p, item);
             OfflinePlayer owner = Bukkit.getOfflinePlayer(owneruuid);
@@ -46,16 +46,16 @@ public class HandleBuyTradeSell {
                             item.setAmount(amountint);
                             p.getInventory().addItem(item);
                         } else {
-                            p.sendMessage("Při platbě došlo k chybě");
+                            p.sendMessage(Config.getMessageComponent("transaction-failed"));
                         }
                     } else {
-                        p.sendMessage("Owner does not have this much items.");
+                        p.sendMessage(Config.getMessageComponent("owner-not-enough-items"));
                     }
                 } else {
-                    p.sendMessage("You dont have enough space in your inventory");
+                    p.sendMessage(Config.getMessageComponent("inventory-full"));
                 }
             } else {
-                p.sendMessage("You dont have enough money to buy this");
+                p.sendMessage(Config.getMessageComponent("not-enough-money-player"));
             }
         });
     }
@@ -65,7 +65,7 @@ public class HandleBuyTradeSell {
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(owneruuid);
         ItemStack item = new ItemStack(material);
 
-        TypeAnvil("Amount", "1",p, material, (amount) -> {
+        TypeAnvil(Config.getPlain("amount", ""), "1",p, material, (amount) -> {
             double balance = VaultHook.getBalance(offlinePlayer);
             ItemStack itemToGive = new ItemStack(material);
             int amountint = amount.intValue();
@@ -79,13 +79,13 @@ public class HandleBuyTradeSell {
                         itemToGive.setAmount(amountint);
                         p.getInventory().removeItem(itemToGive);
                     } else {
-                        p.sendMessage("Owner does not have storage big enough for this");
+                        p.sendMessage(Config.getMessageComponent("owner-not-enough-storage"));
                     }
                 } else {
-                    p.sendMessage("You dont have enough items in your inventory");
+                    p.sendMessage(Config.getMessageComponent("not-enough-items"));
                 }
             } else {
-                p.sendMessage("Owner of this shop doesnt have money for this");
+                p.sendMessage(Config.getMessageComponent("not-enough-money-owner"));
             }
         });
     }
@@ -107,7 +107,7 @@ public class HandleBuyTradeSell {
                     int multiplier = 1;
                     if (Character.isLetter(lastchar)) {
                         if (text.length() < 2) {
-                            p.sendMessage("You need to also type number, not only suffix");
+                            p.sendMessage(Config.getMessageComponent("only-suffix"));
                             return Collections.emptyList();
                         }
                         switch (lastchar) {
@@ -121,7 +121,7 @@ public class HandleBuyTradeSell {
                                 multiplier = 1000000;
                                 break;
                             default:
-                                p.sendMessage("You cant use this symbol here");
+                                p.sendMessage(Config.getMessageComponent("bad-symbol"));
                                 return Collections.emptyList();
                         }
                         substring = text.substring(0, text.length() - 1);
@@ -131,7 +131,7 @@ public class HandleBuyTradeSell {
                         callback.accept(result);
                         return List.of(AnvilGUI.ResponseAction.close());
                     } catch (NumberFormatException e) {
-                        p.sendMessage("This is not valid format");
+                        p.sendMessage(Config.getMessageComponent("unvalid-format"));
                         return Collections.emptyList();
                     }
                 })

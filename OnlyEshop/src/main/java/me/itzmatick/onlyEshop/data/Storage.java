@@ -1,6 +1,7 @@
 package me.itzmatick.onlyEshop.data;
 
 import me.itzmatick.onlyEshop.OnlyEshop;
+import me.itzmatick.onlyEshop.utils.Config;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -36,7 +37,7 @@ public class Storage {
 
         } catch (IOException e) {
         }
-        player.sendMessage("Your eshop has been created!");
+        player.sendMessage(Config.getMessageComponent("shop-created"));
         YamlConfiguration config = ReadFile(uuid);
         config.set("nick", player.getName());
         config.set("uuid", uuid.toString());

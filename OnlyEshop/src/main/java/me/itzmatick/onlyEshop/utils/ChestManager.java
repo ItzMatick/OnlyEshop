@@ -58,7 +58,12 @@ public class ChestManager implements Listener {
                 addLocationToConfig(itemname, location, uuid);
                 chest.setCustomName(itemname);
                 chest.update();
-                e.getPlayer().sendMessage("§aYou have succesfully placed eshop chest!");
+                if (item.getItemMeta().getDisplayName().equals("§e§lBUY CHEST")) {
+                    e.getPlayer().sendMessage(Config.getMessageComponent("chest-placed-buy"));
+                } else if (item.getItemMeta().getDisplayName().equals("§9§lSELL CHEST")) {
+                    e.getPlayer().sendMessage(Config.getMessageComponent("chest-placed-sell"));
+                }
+
             }
         }
     }

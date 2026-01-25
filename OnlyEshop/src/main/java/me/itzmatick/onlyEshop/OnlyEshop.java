@@ -1,11 +1,13 @@
 package me.itzmatick.onlyEshop;
 
 import me.itzmatick.onlyEshop.commands.Executor;
+import me.itzmatick.onlyEshop.commands.Reload;
 import me.itzmatick.onlyEshop.data.Domains;
 import me.itzmatick.onlyEshop.data.Storage;
 import me.itzmatick.onlyEshop.gui.GuiFunctions;
 import me.itzmatick.onlyEshop.gui.Menu;
 import me.itzmatick.onlyEshop.utils.ChestManager;
+import me.itzmatick.onlyEshop.utils.Config;
 import me.itzmatick.onlyEshop.utils.FuzzySearch;
 import me.itzmatick.onlyEshop.utils.HandleBuyTradeSell;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,7 +28,7 @@ public final class OnlyEshop extends JavaPlugin {
         saveResource("template.yml", false);
         saveResource("data/arp.yml", false);
 
-
+        Config.init(this);
         this.storage = new Storage(this);
         this.chestmanager = new ChestManager(this, storage);
         this.handlebuytradesell = new HandleBuyTradeSell(this, chestmanager, storage);
@@ -41,7 +43,7 @@ public final class OnlyEshop extends JavaPlugin {
         getServer().getPluginManager().registerEvents(chestmanager, this);
 
         getCommand("eshop").setExecutor(new Executor(this, storage, guifunctions, domains, menu));
-
+        getCommand("reload").setExecutor(new Reload(this));
     }
 
     @Override

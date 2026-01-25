@@ -7,6 +7,7 @@ import me.itzmatick.onlyEshop.OnlyEshop;
 import me.itzmatick.onlyEshop.data.Domains;
 import me.itzmatick.onlyEshop.data.ShopEntry;
 import me.itzmatick.onlyEshop.data.Storage;
+import me.itzmatick.onlyEshop.utils.Config;
 import me.itzmatick.onlyEshop.utils.FuzzySearch;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -56,25 +57,25 @@ public class Menu {
 
     public void openMenu(Player p, List<ShopEntry> allshops, boolean x) {
 
-        String title = "Eshop browser";
+        String title = Config.getString("edit-domain");
 
         if (allshops.isEmpty()) {
             Gui gui = Gui.gui()
-                    .title(Component.text("No eshops were found"))
+                    .title(Config.getComponent("no-eshops-found-title"))
                     .rows(6)
                     .disableAllInteractions()
                     .create();
 
             gui.setItem(6, 2, ItemBuilder.from(Material.ARROW)
-                    .name(Component.text("§c<< Previous page"))
+                    .name(Config.getComponent("previous-page"))
                     .asGuiItem(event -> {}));
 
             gui.setItem(6, 8, ItemBuilder.from(Material.ARROW)
-                    .name(Component.text("§cNext page >>"))
+                    .name(Config.getComponent("next-page"))
                     .asGuiItem(event -> {}));
 
             gui.setItem(6, 5, ItemBuilder.from(Material.ANVIL)
-                    .name(Component.text("§cSearch"))
+                    .name(Config.getComponent("search"))
                     .glow(x)
                     .asGuiItem(event -> {
                         if (x == true) {
@@ -114,7 +115,7 @@ public class Menu {
                     .name(Component.text(eshop.getTitle()))
                     .lore(finallore)
                     .asGuiItem(event -> {
-                        p.sendMessage("Opening eshop " + eshop.getDomain());
+                        p.sendMessage(Config.replace(Config.getMessageComponent("opening-eshop"), "%domain%", eshop.getDomain()));
                         p.closeInventory();
 
                         domains.Open(eshop.getDomain(), p);
@@ -123,15 +124,15 @@ public class Menu {
         }
 
         gui.setItem(6, 2, ItemBuilder.from(Material.ARROW)
-                .name(Component.text("§c<< Previous page"))
+                .name(Config.getComponent("previous-page"))
                 .asGuiItem(event -> gui.previous()));
 
         gui.setItem(6, 8, ItemBuilder.from(Material.ARROW)
-                .name(Component.text("§cNext page >>"))
+                .name(Config.getComponent("next-page"))
                 .asGuiItem(event -> gui.next()));
 
         gui.setItem(6, 5, ItemBuilder.from(Material.ANVIL)
-                .name(Component.text("§cSearch"))
+                .name(Config.getComponent("search"))
                 .glow(x)
                 .asGuiItem(event -> {
                     if (x == true) {
@@ -196,16 +197,16 @@ public class Menu {
 
         new AnvilGUI.Builder()
                 .plugin(plugin)
-                .title("Search")
+                .title(Config.getPlain("search", ""))
                 .itemLeft(new ItemStack(Material.PAPER))
-                .text("Search anything...")
+                .text(Config.getPlain("default-search-text", ""))
                 .onClick((slot, snapshot) -> {
                     if (slot != AnvilGUI.Slot.OUTPUT) {
                         return Collections.emptyList();
                     }
                     String text = snapshot.getText();
-                    if (text.equalsIgnoreCase("Search anything...")) {
-                        p.sendMessage("You need to write something in order to search");
+                    if (text.equalsIgnoreCase(Config.getPlain("default-search-text", ""))) {
+                        p.sendMessage(Config.getMessageComponent("write-something"));
                         return Collections.emptyList();
                     }
                     searchEshopsDelayed(text, p);

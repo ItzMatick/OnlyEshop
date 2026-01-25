@@ -5,6 +5,7 @@ import me.itzmatick.onlyEshop.data.Domains;
 import me.itzmatick.onlyEshop.data.Storage;
 import me.itzmatick.onlyEshop.gui.GuiFunctions;
 import me.itzmatick.onlyEshop.gui.Menu;
+import me.itzmatick.onlyEshop.utils.Config;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,11 +35,11 @@ public class Executor implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
 
         if (!(commandSender instanceof Player)) {
-            commandSender.sendMessage(plugin.getConfig().getString("messages.bad_instance"));
+            commandSender.sendMessage(Config.getMessageComponent("only-players"));
             return true;
         }
         if (strings.length == 0) {
-            commandSender.sendMessage(plugin.getConfig().getString("messages.noarg"));
+            commandSender.sendMessage(Config.getMessageComponent("invalid-args"));
             return true;
         }
 
@@ -49,18 +50,18 @@ public class Executor implements CommandExecutor {
             case "create":
                 if (!storage.ExistFile(uuid)) {
                     storage.MakeFile(uuid, p);
-                    p.sendMessage(plugin.getConfig().getString("messages.eshopcreated"));
 
-                    domains.AddToArp(uuid, "Eshop_of_" + uuid);
+                    String msg = Config.getString("default-domain").replace("%uuid%", uuid.toString());
+                    domains.AddToArp(uuid, msg);
                 } else {
-                    p.sendMessage(plugin.getConfig().getString("messages.alreadyexist"));
+                    p.sendMessage(Config.getMessageComponent("shop-already-exists"));
                 }
                 guifunctions.OpenSettings(p);
                 break;
 
             case "open":
                 if (strings.length != 2) {
-                    p.sendMessage("§cUsage: /eshop open <uuid>");
+                    p.sendMessage(Config.getMessageComponent("eshop-open-usage"));
                     return true;
                 } else {
                     domains.Open(strings[1], p);
@@ -68,14 +69,14 @@ public class Executor implements CommandExecutor {
                 break;
             case "domain":
                 if (strings.length != 3 || !strings[1].equals("edit")) {
-                    p.sendMessage("§cUsage: /eshop domain edit <newname>");
+                    p.sendMessage(Config.getMessageComponent("eshop-domain-edit-usage"));
                     return true;
                 }
                 domains.ChangeDomain(uuid, strings[2]);
                 break;
             case "title":
                 if (strings.length != 3 || !strings[1].equals("edit")) {
-                    p.sendMessage("§cUsage: /eshop title edit <newtitle>");
+                    p.sendMessage(Config.getMessageComponent("eshop-title-edit-usage"));
                     return true;
                 }
                 YamlConfiguration config = storage.ReadFile(uuid);
@@ -84,25 +85,25 @@ public class Executor implements CommandExecutor {
                     storage.SaveFile(uuid, config);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    p.sendMessage("New title havent been set succesfully");
+                    p.sendMessage(Config.getMessageComponent("unknown-error"));
                 }
                 break;
             case "menu":
                 if (strings.length != 1) {
-                    p.sendMessage("§cUsage: /eshop menu");
+                    p.sendMessage(Config.getMessageComponent("eshop-menu-usage"));
                     return true;
                 }
                 menu.searchEshops(null, p);
                 break;
             case "edit":
                 if (strings.length != 1) {
-                    p.sendMessage("§cUsage: /eshop edit");
+                    p.sendMessage(Config.getMessageComponent("eshop-edit-usage"));
                     return true;
                 }
                 guifunctions.OpenSettings(p);
                 break;
             default:
-                p.sendMessage(plugin.getConfig().getString("messages.badarg"));
+                p.sendMessage(Config.getMessageComponent("invalid-args"));
                 return true;
         }
     return true;
