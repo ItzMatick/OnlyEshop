@@ -49,7 +49,7 @@ Do you think our Roadmap is boring and we should focus on something else?
 TELL US! We are building this plugin FOR YOU.
 
 📢 JOIN OUR DISCORD / REPORT BUGS HERE:
-<will be added>
+X will be added X
 
 Thank you for supporting OnlyEshop.
 Let's change the economy meta together.
