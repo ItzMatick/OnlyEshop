@@ -1,6 +1,6 @@
 # OnlyEshop
 
-   VERSION: 1.0 OPEN BETA
+   VERSION: 1.0.0 OPEN BETA
 
 👋 HELLO SERVER OWNER!
 
