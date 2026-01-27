@@ -9,6 +9,7 @@ import me.itzmatick.onlyEshop.data.Domains;
 import me.itzmatick.onlyEshop.data.Storage;
 import me.itzmatick.onlyEshop.utils.Config;
 import me.itzmatick.onlyEshop.utils.HandleBuyTradeSell;
+import me.itzmatick.onlyEshop.utils.Materialy;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.wesjd.anvilgui.AnvilGUI;
@@ -133,10 +134,9 @@ public class GuiFunctions {
 
             for (int i : used_slots) {
                 gui.setItem(i, guiItem);
-            }
+            } */
             gui.open(player);
 
-             */
         }
     }
 
@@ -308,15 +308,11 @@ public class GuiFunctions {
                 .name(color(Config.getComponent("edit-material").toString()))
                 .asGuiItem(event -> {
 
-                    List<Material> materials = List.of(
-                            Material.DIAMOND,
-                            Material.GOLD_INGOT,
-                            Material.IRON_INGOT,
-                            Material.EMERALD
-                    );
+
+                    List<Material> materials = Materialy.getMaterialy();
 
                     PaginatedGui paginatedgui = Gui.paginated()
-                            .title(Config.getComponent("Edit material"))
+                            .title(Config.getComponent("edit.material"))
                             .rows(6)
                             .pageSize(45)
                             .disableAllInteractions()
@@ -433,11 +429,11 @@ public class GuiFunctions {
         String defaulttxt = String.join(";", config.getStringList(path + "lore"));
 
         GuiItem guiItem4 = ItemBuilder.from(Material.BIRCH_SIGN)
-                .name(Config.getComponent("edit.lore"))
+                .name(Config.getComponent("edit-lore"))
                 .asGuiItem(event -> {
                     new AnvilGUI.Builder()
                             .plugin(plugin)
-                            .title(Config.getPlain("edit.lore", ""))
+                            .title(Config.getPlain("edit-lore", ""))
                             .text(defaulttxt)
                             .onClick((slot, snapshot) -> {
                                 if (slot != AnvilGUI.Slot.OUTPUT) {
@@ -591,12 +587,7 @@ public class GuiFunctions {
                 .name(Config.getComponent("edit-material"))
                 .asGuiItem(event -> {
 
-                    List<Material> materials = List.of(
-                            Material.DIAMOND,
-                            Material.GOLD_INGOT,
-                            Material.IRON_INGOT,
-                            Material.EMERALD
-                    );
+                    List<Material> materials = Materialy.getMaterialy();
 
                     PaginatedGui paginatedgui = Gui.paginated()
                             .title(Config.getComponent("edit-material"))

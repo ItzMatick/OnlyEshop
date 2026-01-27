@@ -9,5 +9,6 @@ me\itzmatick\onlyEshop\commands\Executor.class
 me\itzmatick\onlyEshop\gui\GuiFunctions.class
 me\itzmatick\onlyEshop\data\Domains.class
 me\itzmatick\onlyEshop\OnlyEshop.class
+me\itzmatick\onlyEshop\utils\Materialy.class
 me\itzmatick\onlyEshop\utils\ChestManager.class
 me\itzmatick\onlyEshop\gui\Menu.class

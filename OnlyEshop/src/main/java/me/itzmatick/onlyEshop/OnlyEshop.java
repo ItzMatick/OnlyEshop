@@ -27,6 +27,7 @@ public final class OnlyEshop extends JavaPlugin {
         saveDefaultConfig();
         saveResource("template.yml", false);
         saveResource("data/arp.yml", false);
+        saveResource("README.txt", true);
 
         Config.init(this);
         this.storage = new Storage(this);

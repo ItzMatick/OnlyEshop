@@ -10,6 +10,9 @@
 #
 #   OnlyEshop Configuration File
 #   Version: 1.0.0 BETA
+#
+#   Please read README.txt before using!
+#
 # -----------------------------------------------------------------------------
 
 settings:
@@ -58,9 +61,7 @@ messages:
   domain-invalid: "&cInvalid domain name! Use only A-Z, 0-9 and underscores."
 
   # --- Economy & Transactions ---
-  # Hráč nemá peníze / Player needs more money
   not-enough-money-player: "&cYou don't have enough money! You need &e%diff%$ &cmore."
-  # Majitel nemá peníze na vykoupení / Owner cannot afford to buy
   not-enough-money-owner: "&cThe shop owner doesn't have enough money to buy this from you."
 
   # Inventory issues
@@ -102,8 +103,11 @@ more:
   edit-name: "&eEdit name"
   edit-lore: "&eEdit lore"
   edit-material: "&eEdit material"
-  edit-price: "&6Edit price"
-  edit-action: "&bEdit action"
+  edit-price: "&eEdit price"
+  edit-action: "&eEdit action"
+  edit-domain: "&eEdit domain"
+  edit-content: "&eEdit content"
+  edit-search-title: "&eEdit search title"
 
   # Navigation
   previous-page: "&c<< Previous page"
@@ -112,26 +116,23 @@ more:
   close: "&cClose"
 
   # Search
-  search: "Search"
+  search: "&cSearch"
   default-search-text: "Search anything..."
 
   # Misc GUI items
   amount: "Amount"
-  delete-item: "&4Delete item"
+  delete-item: "&cDelete item"
 
   # --- Action Statuses (Shown in Lore) ---
   actions:
     sellplayers: "&aSELL TO PLAYERS"
-    buyfromplayers: "&9BUY FROM PLAYERS"
-    close: "&cCLOSE MENU"
-    nextpage: "&7NEXT PAGE"
-    previouspage: "&7PREVIOUS PAGE"
-    none: "&8NONE"
+    buyfromplayers: "&aBUY FROM PLAYERS"
+    close: "&aCLOSE MENU"
+    nextpage: "&aNEXT PAGE"
+    previouspage: "&aPREVIOUS PAGE"
+    none: "&aNONE"
 
   # --- Inventory Titles ---
   edit-your-eshop: "Edit your eshop"
-  edit-search-title: "Edit search title"
-  edit-domain: "Edit domain"
-  edit-content: "Edit content"
   eshop-browser-title: "Eshop browser"
   no-eshops-found-title: "No eshops were found"

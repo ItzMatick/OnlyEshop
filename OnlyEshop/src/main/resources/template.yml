@@ -1,63 +1,86 @@
-nick: "Neznamy"
-uuid: "null"
-chests:
+# -----------------------------------------------------------------------------
+#   DEFAULT PLAYER DATA TEMPLATE
+#   This file is generated when a new player creates a shop.
+# -----------------------------------------------------------------------------
 
+# -----------------------------------------------------------------------------
+# Do not change this - these values will be automaticly changed
+nick: "Unknown"
+uuid: "null"
+chests: {}
+# -----------------------------------------------------------------------------
+
+
+# --- Page 1 (Main Menu) ---
 menu0:
-  title: "Menu hráče %nick%"
+  title: "Menu of %nick% - page 1"
   rows: 3
   items:
-    statistika:
+    # Main Icon (Center)
+    item1:
       slot: 13
       material: PLAYER_HEAD
-      action:
-      action-info:
-      model-data:
-      name: "&e&lTvé Statistiky"
+      name: "&e&lEshop"
       lore:
-        - "&7Vítej v našem shopu!"
-    zavrit:
-      slot: 26
-      material: BARRIER
-      action: "CLOSE"
-      action-info:
-      model-data:
-      name: "&cZavřít menu"
-      lore:
-    nextpage:
-      slot: 25
-      material: ARROW
-      action: "NEXTPAGE"
-      action-info:
-      model-data:
-      name: "&cNEXTPAGE"
-      lore:
+        - "&7Welcome to my shop!"
+        - "&7Check out my items."
+      action: "NONE"
+      action-info: ""
+      model-data: 0
 
-menu1:
-  title: "Menu hráče %nick%"
-  rows: 5
-  items:
-    statistika:
-      slot: 13
-      material: PLAYER_HEAD
-      action:
-      action-info:
-      model-data:
-      name: "&e&lTvé Statistiky"
-      lore:
-        - "&7Vítej v našem shopu!"
-    zavrit:
-      slot: 26
+    # Close Button (Bottom Right)
+    item2:
+      slot: 18
       material: BARRIER
+      name: "&cClose menu"
+      lore: []
       action: "CLOSE"
-      action-info:
-      model-data:
-      name: "&cZavřít menu"
-      lore:
-    nextpage:
+      action-info: ""
+      model-data: 0
+
+    # Next Page Button
+    item3:
       slot: 25
       material: ARROW
-      action: "PREVIOUSPAGE"
-      action-info:
-      model-data:
-      name: "&cPREVIOUSPAGE"
+      name: "&aNext Page >>"
+      lore: []
+      action: "NEXTPAGE"
+      action-info: ""
+      model-data: 0
+
+# --- Page 2 (Details / Stats) ---
+menu1:
+  title: "Menu of %nick% - page 2"
+  rows: 3
+  items:
+    # Stats Icon (Center)
+    item1:
+      slot: 13
+      material: DIAMOND
+      name: "&e&lOur eshop"
       lore:
+        - "&7Welcome to my shop!"
+        - "&7Check out my items."
+      action: "NONE"
+      action-info: ""
+      model-data: 0
+
+    # Close Button
+    item2:
+      slot: 26
+      material: BARRIER
+      name: "&cClose menu"
+      lore: []
+      action: "CLOSE"
+      action-info: ""
+      model-data: 0
+
+    # Previous Page Button
+    item3:
+      slot: 18
+      material: ARROW
+      name: "&c<< Previous Page"
+      lore: []
+      action: "PREVIOUSPAGE"
+      action-info: ""
+      model-data: 0

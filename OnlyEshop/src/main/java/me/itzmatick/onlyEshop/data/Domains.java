@@ -50,7 +50,7 @@ public class Domains {
             }
             if (!isTaken) {
                 config.set(uuid + ".domain", newname);
-                player.sendMessage(Config.getMessageComponent("domain-changed"));
+                player.sendMessage(Config.replace(Config.getMessageComponent("domain-changed"),"%domain%", newname));
             } else {
                 player.sendMessage(Config.getMessageComponent("domain-taken"));
             }

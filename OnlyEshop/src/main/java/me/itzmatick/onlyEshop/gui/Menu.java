@@ -57,7 +57,7 @@ public class Menu {
 
     public void openMenu(Player p, List<ShopEntry> allshops, boolean x) {
 
-        String title = Config.getString("edit-domain");
+        String title = Config.getPlain("edit-domain", "");
 
         if (allshops.isEmpty()) {
             Gui gui = Gui.gui()

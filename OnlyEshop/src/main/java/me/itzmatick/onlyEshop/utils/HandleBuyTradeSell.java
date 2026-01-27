@@ -55,7 +55,8 @@ public class HandleBuyTradeSell {
                     p.sendMessage(Config.getMessageComponent("inventory-full"));
                 }
             } else {
-                p.sendMessage(Config.getMessageComponent("not-enough-money-player"));
+                double diff = (amount * price) - balance;
+                p.sendMessage(Config.replace(Config.getMessageComponent("not-enough-money-player"), "%diff%", String.valueOf(diff)));
             }
         });
     }
