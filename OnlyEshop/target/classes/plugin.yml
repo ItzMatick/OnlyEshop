@@ -7,13 +7,3 @@ commands:
   eshop:
     description: Opens eshop
     usage: /eshop
-
-  reload:
-    description: Reload plugin
-    usage: /reload eshop
-    permission: only.eshops.reload
-
-permissions:
-  only.eshop.reload:
-    description: Reload plugin permissions
-    default: op

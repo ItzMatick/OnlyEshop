@@ -2,12 +2,14 @@ package me.itzmatick.onlyEshop.utils;
 
 import me.itzmatick.onlyEshop.OnlyEshop;
 import me.itzmatick.onlyEshop.data.Storage;
+import net.kyori.adventure.text.Component;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.*;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +32,7 @@ public class HandleBuyTradeSell {
         Material material = Material.getMaterial(matName.toUpperCase());
         ItemStack item = new ItemStack(material, 1);
 
-        TypeAnvil(Config.getPlain("amount", ""), "1", p, material, (amount) -> {
+        TypeAnvil(Config.getPlain("amount", ""), "1", p, material, price, Config.getString("buying"), (amount) -> {
             double balance = VaultHook.getBalance(p);
             int invspace = canFit(p, item);
             OfflinePlayer owner = Bukkit.getOfflinePlayer(owneruuid);
@@ -66,7 +68,7 @@ public class HandleBuyTradeSell {
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(owneruuid);
         ItemStack item = new ItemStack(material);
 
-        TypeAnvil(Config.getPlain("amount", ""), "1",p, material, (amount) -> {
+        TypeAnvil(Config.getPlain("amount", ""), "1",p, material, price, Config.getString("selling"), (amount) -> {
             double balance = VaultHook.getBalance(offlinePlayer);
             ItemStack itemToGive = new ItemStack(material);
             int amountint = amount.intValue();
@@ -97,6 +99,60 @@ public class HandleBuyTradeSell {
                 .plugin(plugin)
                 .title(title)
                 .itemLeft(new ItemStack(material))
+                .text(defaulttext)
+                .onClick((slot, snapshot) -> {
+                    if (slot != AnvilGUI.Slot.OUTPUT) {
+                        return Collections.emptyList();
+                    }
+                    String text = snapshot.getText();
+                    String substring = text;
+                    char lastchar = text.charAt(text.length() - 1);
+                    int multiplier = 1;
+                    if (Character.isLetter(lastchar)) {
+                        if (text.length() < 2) {
+                            p.sendMessage(Config.getMessageComponent("only-suffix"));
+                            return Collections.emptyList();
+                        }
+                        switch (lastchar) {
+                            case 'k', 'K':
+                                multiplier = 1000;
+                                break;
+                            case 'b', 'B':
+                                multiplier = 1000000000;
+                                break;
+                            case 'm', 'M':
+                                multiplier = 1000000;
+                                break;
+                            default:
+                                p.sendMessage(Config.getMessageComponent("bad-symbol"));
+                                return Collections.emptyList();
+                        }
+                        substring = text.substring(0, text.length() - 1);
+                    }
+                    try {
+                        double result = Double.parseDouble(substring) * multiplier;
+                        callback.accept(result);
+                        return List.of(AnvilGUI.ResponseAction.close());
+                    } catch (NumberFormatException e) {
+                        p.sendMessage(Config.getMessageComponent("unvalid-format"));
+                        return Collections.emptyList();
+                    }
+                })
+                .open(p);
+    }
+
+    public void TypeAnvil(String title, String defaulttext, Player p, Material material, double price, String method, Consumer<Double> callback) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        Component loreLine1 = Config.replace(Config.getComponent("anvil-lore"), "%method%", method);
+        Component loreLine = Config.replace(loreLine1, "%price%", String.valueOf(price));
+        meta.lore(List.of(loreLine));
+        item.setItemMeta(meta);
+
+        new AnvilGUI.Builder()
+                .plugin(plugin)
+                .title(title)
+                .itemLeft(item)
                 .text(defaulttext)
                 .onClick((slot, snapshot) -> {
                     if (slot != AnvilGUI.Slot.OUTPUT) {

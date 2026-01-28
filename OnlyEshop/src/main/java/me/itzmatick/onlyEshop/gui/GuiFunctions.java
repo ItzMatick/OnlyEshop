@@ -245,9 +245,9 @@ public class GuiFunctions {
                         UUID u = UUID.randomUUID();
                         config.set(menu + ".items." + u, null );
                         config.set(menu + ".items." + u + ".slot", event.getSlot());
-                        config.set(menu + ".items." + u + ".material", Config.getString("editor-empty-item-material"));
+                        config.set(menu + ".items." + u + ".material", Config.getPlain("editor-empty-item-material", ""));
                         config.set(menu + ".items." + u + ".action", "NONE");
-                        config.set(menu + ".items." + u + ".name", Config.getComponent("editor-default-item-name"));
+                        config.set(menu + ".items." + u + ".name", Config.getPlain("editor-default-item-name", ""));
                         config.set(menu + ".items." + u + ".lore", new ArrayList<>());
                         String path = (menu + ".items." + u + ".");
                         storage.SaveFile(uuid, config);
@@ -305,7 +305,7 @@ public class GuiFunctions {
         gui.setItem(9, guiItem1);
 
         GuiItem guiItem2 = ItemBuilder.from(Material.GRASS_BLOCK)
-                .name(color(Config.getComponent("edit-material").toString()))
+                .name(Config.getComponent("edit-material"))
                 .asGuiItem(event -> {
 
 
@@ -482,6 +482,13 @@ public class GuiFunctions {
                     });
                 });
         gui.setItem(13, guiItem5);
+
+        GuiItem guiItem10 = ItemBuilder.from(Material.BOOK)
+                .name(Config.getComponent("help"))
+                .asGuiItem(event -> {
+
+                });
+        gui.setItem(14, guiItem10);
 
         GuiItem guiItem7 = ItemBuilder.from(Material.GOLD_BLOCK)
                 .name(Config.getComponent("edit-price"))
@@ -780,7 +787,15 @@ public class GuiFunctions {
                     EditLayout(player, 0);
                 });
 
-        gui.setItem(14, guiItem8);
+        gui.setItem(11, guiItem8);
+
+        GuiItem guiItem9 = ItemBuilder.from(Material.BARRIER)
+                .name(Config.getComponent("close"))
+                .asGuiItem(event -> {
+                    gui.close(player);
+                });
+
+        gui.setItem(17, guiItem9);
         /*
         if (config.isSet(path + "action") && (config.getString(path + "action").equals("BUY") || config.getString(path + "action").equals("SELL"))) {
             gui.setItem(15, guiItem7);

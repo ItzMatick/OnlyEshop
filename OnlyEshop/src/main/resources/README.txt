@@ -31,14 +31,16 @@ We need YOU to vote on what is most important!
 
 [ ] Phase 1: Polish (DONE)
     - Basic Economy, Domains, Chest linking, Editor GUI.
+    - Fuzzy search - really accurate searching engine.
 
 [ ] Phase 2: Visuals & UX (PLANNED)
     - Custom Resource Pack support (Custom edit menus and items for player shops - like custom buttons).
     - Sound Effects (Clicking, Purchasing, Errors).
     - Better Chat formatting.
+    - Transaction Logs (See who bought what).
+    - Ability to sell players priority in the integrated eshop browser.
 
 [ ] Phase 3: Management (FUTURE)
-    - Transaction Logs (See who bought what).
     - Trusted Players (Allow friends to edit your shop).
     - Automation Tools (Autonomously buy items from other players' eshops and more).
     - Admin Tools

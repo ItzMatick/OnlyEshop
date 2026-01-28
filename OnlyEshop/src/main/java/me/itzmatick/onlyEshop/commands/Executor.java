@@ -21,13 +21,15 @@ public class Executor implements CommandExecutor {
     private final GuiFunctions guifunctions;
     private final Domains domains;
     private final Menu menu;
+    private final Reload reload;
 
-    public Executor (OnlyEshop plugin, Storage storage, GuiFunctions guifunctions, Domains domains, Menu menu) {
+    public Executor (OnlyEshop plugin, Storage storage, GuiFunctions guifunctions, Domains domains, Menu menu, Reload reload) {
         this.plugin = plugin;
         this.storage = storage;
         this.guifunctions = guifunctions;
         this.domains = domains;
         this.menu = menu;
+        this.reload = reload;
     }
 
 
@@ -79,10 +81,14 @@ public class Executor implements CommandExecutor {
                     p.sendMessage(Config.getMessageComponent("eshop-title-edit-usage"));
                     return true;
                 }
-                YamlConfiguration config = storage.ReadFile(uuid);
-                config.set("menu.title", strings[2]);
+                YamlConfiguration config = domains.ReadFile();
+                if (!config.isSet(uuid + "menu-title")) {
+                    p.sendMessage(Config.getMessageComponent("dont-have-eshop"));
+                    break;
+                }
+                config.set("menu-title", strings[2]);
                 try {
-                    storage.SaveFile(uuid, config);
+                    config.save(domains.GetFile());
                 } catch (Exception e) {
                     e.printStackTrace();
                     p.sendMessage(Config.getMessageComponent("unknown-error"));
@@ -101,6 +107,14 @@ public class Executor implements CommandExecutor {
                     return true;
                 }
                 guifunctions.OpenSettings(p);
+                break;
+            case "reload":
+                if (strings.length == 1) {
+                    reload.reload(commandSender);
+                }
+                break;
+            case "help":
+                Help.send(p);
                 break;
             default:
                 p.sendMessage(Config.getMessageComponent("invalid-args"));

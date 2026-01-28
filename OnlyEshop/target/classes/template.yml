@@ -40,7 +40,7 @@ menu0:
 
     # Next Page Button
     item3:
-      slot: 25
+      slot: 26
       material: ARROW
       name: "&aNext Page >>"
       lore: []

@@ -2,13 +2,10 @@ package me.itzmatick.onlyEshop.commands;
 
 import me.itzmatick.onlyEshop.OnlyEshop;
 import me.itzmatick.onlyEshop.utils.Config;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-public class Reload implements CommandExecutor {
+public class Reload {
 
     private final OnlyEshop plugin;
 
@@ -16,8 +13,7 @@ public class Reload implements CommandExecutor {
         this.plugin = plugin;
     }
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String @NotNull [] strings) {
+    public boolean reload (CommandSender commandSender) {
         if (!(commandSender instanceof Player)) {
             commandSender.sendMessage("Only players can use this command");
             return true;

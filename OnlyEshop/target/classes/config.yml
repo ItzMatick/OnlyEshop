@@ -82,6 +82,27 @@ messages:
   # Misc
   opening-eshop: "&7Opening eshop: &e%domain%"
 
+  # Help command
+  help:
+    - ""
+    - "           &6&lOnlyEshop &7- Help Menu"
+    - "&8&m---------------------------------------------"
+    - " &6&lShop Management:"
+    - " &e/eshop create <name> &7- Create a new shop."
+    - " &e/eshop edit &7- Edit your eshop."
+    - " &e/eshop title edit &7- Edit browser title."
+    - " &e/eshop domain edit &7- Change eshop domain."
+    - ""
+    - " &b&lOpen and find eshops"
+    - " &3/eshop menu &7- Opens eshop browser."
+    - " &3/eshop open <domain> nebo <owner uuid> &7- Opens eshop."
+    - ""
+    - " &7&lTIP: Multi-line Descriptions:"
+    - " &7When setting the Item Lore, use a semicolon &f';'"
+    - " &7to create a new line."
+    - " &7Example: &fRare Sword;One Hit Kill"
+
+
 # -----------------------------------------------------------------------------
 #   GUI SETTINGS (Visuals & Buttons)
 #   Here you can translate the text inside the menus.
@@ -91,6 +112,11 @@ more:
   default-domain: "Eshop_of_%uuid%"
   default-eshop-description: "nothing was set"
   default-menu-material: "STONE"
+
+  # Anvil lore (Buying or selling)
+  buying: "BUYING"      #buy method
+  selling: "SELLING"    #sell method
+  anvil-lore: "&7%method%, Price per piece: %price%"
 
   # Editor Placeholders
   editor-empty-item: "&7Empty slot"
@@ -114,6 +140,7 @@ more:
   next-page: "&cNext page >>"
   back: "&cBack"
   close: "&cClose"
+  help: "&cHelp"
 
   # Search
   search: "&cSearch"

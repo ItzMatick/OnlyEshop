@@ -5,6 +5,9 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Config {
 
     private static OnlyEshop plugin;
@@ -68,5 +71,13 @@ public class Config {
         String msg = plugin.getConfig().getString("more." + key, defaultValue);
 
         return msg.replaceAll("(?i)&[0-9a-fk-or]", "");
+    }
+
+    public static List<Component> getComponentList(String key) {
+        List<Component> componentlist = new ArrayList<>();
+        for (String line : plugin.getConfig().getStringList(key)) {
+            componentlist.add(LegacyComponentSerializer.legacyAmpersand().deserialize(line));
+        }
+        return componentlist;
     }
 }

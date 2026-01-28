@@ -1,6 +1,8 @@
 package me.itzmatick.onlyEshop;
 
+import me.itzmatick.onlyEshop.commands.EshopTab;
 import me.itzmatick.onlyEshop.commands.Executor;
+import me.itzmatick.onlyEshop.commands.Help;
 import me.itzmatick.onlyEshop.commands.Reload;
 import me.itzmatick.onlyEshop.data.Domains;
 import me.itzmatick.onlyEshop.data.Storage;
@@ -21,6 +23,8 @@ public final class OnlyEshop extends JavaPlugin {
     private FuzzySearch fuzzysearch;
     private HandleBuyTradeSell handlebuytradesell;
     private ChestManager chestmanager;
+    private Reload reload;
+    private Help help;
 
     @Override
     public void onEnable() {
@@ -30,6 +34,8 @@ public final class OnlyEshop extends JavaPlugin {
         saveResource("README.txt", true);
 
         Config.init(this);
+        this.help = new Help();
+        this.reload = new Reload(this);
         this.storage = new Storage(this);
         this.chestmanager = new ChestManager(this, storage);
         this.handlebuytradesell = new HandleBuyTradeSell(this, chestmanager, storage);
@@ -39,12 +45,11 @@ public final class OnlyEshop extends JavaPlugin {
         this.fuzzysearch = new FuzzySearch();
         this.menu = new Menu(this, storage, domains);
 
-
+        getCommand("eshop").setTabCompleter(new EshopTab());
 
         getServer().getPluginManager().registerEvents(chestmanager, this);
 
-        getCommand("eshop").setExecutor(new Executor(this, storage, guifunctions, domains, menu));
-        getCommand("reload").setExecutor(new Reload(this));
+        getCommand("eshop").setExecutor(new Executor(this, storage, guifunctions, domains, menu, reload));
     }
 
     @Override
